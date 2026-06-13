@@ -21,7 +21,7 @@ from aiohttp import ClientSession
 
 
 # global variable declarations, with 1 exception that mix_settings is a function that defines the default global mix settings
-files=["commands", "coins", "bank", "shell", "bomb", "ticket", "letter", "banana", "voice"]
+files=["commands", "coins", "bank", "shell", "bomb", "ticket", "letter", "banana", "voice", "voucher"]
 file_checks={file:False for file in files}
 lists={file:{} for file in files}
 user_info={}
@@ -560,6 +560,8 @@ class MessageHandlers:
 class EconomyUseHandlers:
     @staticmethod
     async def handle(bot: commands.Bot, ctx: commands.Context, item: str):
+        if item == "voucher":
+            return await EconomyUseHandlers._use_voucher(ctx, item)
         if item == "bomb":
             return await EconomyUseHandlers._use_bomb(ctx, item)
         if item == "ticket":
@@ -571,6 +573,23 @@ class EconomyUseHandlers:
         if item == "banana":
             return await EconomyUseHandlers._use_banana(ctx, item)
         return await error(ctx, "Invalid item")
+
+    @staticmethod
+    async def _use_voucher(ctx: commands.Context, item: str):
+        try:
+            if subtract_item(item, ctx.author.id, 1):
+                neel = discord.utils.get(ctx.guild.members, name="megalonvii")
+                if not ctx.author.id == neel.id:
+                    channel = discord.utils.get(ctx.guild.channels, name="heaven")
+                    if channel is None:
+                        channel = discord.utils.get(ctx.guild.channels, name="wom-shenanigans") # test environment
+                    await channel.send(f"<@{neel.id}>, {ctx.author.name} has purchased a delivery. You are now obligated to personally gift them whatever! Don't back out of it now...")
+                    return await reply(ctx, "Neel has been notified, you gambling addicted bastard...")
+                add_coins(ctx.author.id, 100000)
+                return await error(ctx, "You're Neel. If you want to gift yourself something just go out and do it")
+            return None
+        except:
+            return await error(ctx, "Neel is not in the server")
 
     @staticmethod
     async def _use_bomb(ctx: commands.Context, item: str):

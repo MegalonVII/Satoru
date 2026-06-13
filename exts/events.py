@@ -87,7 +87,7 @@ class Events(commands.Cog):
                 pass
             add_coins(member.id,100)
             direct_to_bank(member.id, 0)
-            return await member.guild.system_channel.send(f"Welcome, {member.mention}, to **Chan's Strip**! This is your one-way ticket to pleasure never felt before. You'll NEVER want to leave from here...\nFor a grasp of the rules, however (yes, we have those), we do ask that you check <#1512218538470015056>.\n*Remember to take breaks.*")
+            return await member.guild.system_channel.send(f"Welcome, {member.mention}, to **Chan's Strip**! This is your one-way ticket to pleasure never felt before. You'll NEVER want to leave from here...\nFor a grasp of the rules, however (yes, we have those), we do ask that you check <#1512218538470015056>.\n*Remember to take breaks. Dying to win and risking death to win are completely different.*")
         else:
             try:
                 beep = discord.utils.get(member.guild.roles, name="beep")
@@ -109,7 +109,7 @@ class Events(commands.Cog):
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        listsToCheck = lists[2:]
+        listsToCheck = ["coins", "bank", "shell", "bomb", "ticket", "letter", "banana", "voice", "voucher"]
         for list in listsToCheck:
             csv = pd.read_csv(f'csv/{list}.csv')
             csv = csv[csv['user_id'] != member.id]

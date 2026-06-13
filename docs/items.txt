@@ -1,3 +1,4 @@
+voucher
 bomb
 ticket
 letter
