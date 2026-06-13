@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# misc
+.DS_Store
+csv/
+*.mp3
+.syncedlyrics/
+cookies.txt
