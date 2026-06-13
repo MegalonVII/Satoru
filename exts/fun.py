@@ -117,7 +117,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='rps')
     async def rps(self, ctx, playerChoice: str=None):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if assert_cooldown("rps", ctx.author.id) != 0 :
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('rps', ctx.author.id)} seconds")
             if playerChoice is None:
@@ -150,7 +150,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='trivia')
     async def trivia(self, ctx, type:str = None):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if assert_cooldown("trivia", ctx.author.id) != 0:
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('trivia', ctx.author.id)} seconds")
 
@@ -199,7 +199,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='deathbattle', aliases=['db'])
     async def deathbattle(self, ctx, member: discord.Member):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if self.currentFight:
                 return await error(ctx, f"There is currently a fight going on")
             if member.bot:
@@ -223,7 +223,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='ship')
     async def ship(self, ctx: commands.Context, str1: str, str2: str):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             half_str1 = str1[:len(str1) // 2 + 1] if len(str1) % 2 == 1 else str1[:len(str1) // 2]
             half_str2 = str2[len(str2) // 2 + 1:] if len(str2) % 2 == 1 else str2[len(str2) // 2:]
             merged_string = half_str1 + half_str2

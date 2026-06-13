@@ -13,7 +13,7 @@ class Birthday(commands.Cog):
 
     @commands.command(name='birthday')
     async def birthday(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             bday, tz_obj, err = await collect_birthday_and_timezone(self.bot, ctx)
             if err:
                 return await error(ctx, err)
@@ -21,7 +21,7 @@ class Birthday(commands.Cog):
             
     @commands.command(name='birthdaylist', aliases=['bdaylist', 'bdl'])
     async def birthday_list(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             temp_data = []
             for key in user_info.keys():
                 member = discord.utils.get(ctx.message.guild.members, id=key)

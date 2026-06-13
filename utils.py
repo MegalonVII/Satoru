@@ -1449,15 +1449,17 @@ def stolen_funds(userID: int, coins: int) -> bool:
     create_list("bank")
     return True
 
-async def in_wom_shenanigans(ctx):
-    wom_shenanigans = discord.utils.get(ctx.guild.channels, name='wom-shenanigans')
-    if wom_shenanigans is None:
+async def in_heaven(ctx):
+    heaven = discord.utils.get(ctx.guild.channels, name='heaven')
+    if heaven is None:
+        heaven = discord.utils.get(ctx.guild.channels, name='wom-shenanigans')
+    if heaven is None:
         await shark_react(ctx.message)
-        await reply(ctx, "ask for or make a wom-shenanigans channel first, stupid")
+        await reply(ctx, "ask for or make a heaven channel first, stupid")
         return False
-    if not ctx.message.channel.id == wom_shenanigans.id:
+    if not ctx.message.channel.id == heaven.id:
         await shark_react(ctx.message)
-        await reply(ctx, f"go to <#{wom_shenanigans.id}>, jackass")
+        await reply(ctx, f"go to <#{heaven.id}>, jackass")
         return False
     return True
 

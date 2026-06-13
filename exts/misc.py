@@ -92,7 +92,7 @@ class Miscellaneous(commands.Cog):
     
     @commands.command(name='uptime')
     async def uptime(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             try:
                 await ctx.message.delete()
             except Exception:

@@ -19,7 +19,7 @@ class Economy(commands.Cog):
   
     @commands.command(name='slots')
     async def slots(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if assert_cooldown('slots', ctx.author.id) != 0:
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('slots', ctx.author.id)} seconds")
             if not subtract_coins(ctx.author.id, 10):
@@ -38,7 +38,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='bet')
     async def bet(self, ctx, amount:int):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if assert_cooldown('bet', ctx.author.id) != 0:
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('bet', ctx.author.id)} seconds")
             if subtract_coins(ctx.author.id, amount):
@@ -53,7 +53,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='steal')
     async def steal(self, ctx, target: discord.Member):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if target.bot or target == ctx.author:
                 return await error(ctx, "You can't steal from a bot or from yourself")
             if not steal_target_tracking(ctx.author.id, target, update_counts=False):
@@ -79,7 +79,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='heist')
     async def heist(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if assert_cooldown("heist", ctx.author.id) != 0:
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('heist', ctx.author.id)} seconds")
             if random.randint(1, 100) == 1: # successful heist
@@ -103,14 +103,14 @@ class Economy(commands.Cog):
 
     @commands.command(name='deposit', aliases=['dep'])
     async def deposit(self, ctx, amt:int):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if dep(ctx.author.id, amt):
                 return await reply(ctx, f"Successfully deposited {amt} {gojo_washington_word(amt)} {gojowashington}!")
             return await error(ctx, "Insufficient funds")
 
     @commands.command(name='withdraw', aliases=['wd'])
     async def withdraw(self, ctx, amt:int):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if wd(ctx.author.id, amt):
                 return await reply(ctx, f"Successfully withdrew {amt} {gojo_washington_word(amt)} {gojowashington}!")
             return await error(ctx, "Insufficient funds")
@@ -141,7 +141,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='paypal')
     async def paypal(self, ctx, recipient:discord.Member, amount:int):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if amount <= 0:
                 return await error(ctx, "Invalid payment amount")
             if recipient.bot or recipient.id == ctx.author.id:
@@ -162,7 +162,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='buy')
     async def buy(self, ctx, item:str, number:int = 1):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if number < 1:
                 return await error(ctx, "Invalid number requested")
             item = item.lower()
@@ -176,7 +176,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='sell')
     async def sell(self, ctx, item:str, number:int = 1):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             if number < 1:
                 return await error(ctx, "Invalid number requested")
             item = item.lower()
@@ -195,7 +195,7 @@ class Economy(commands.Cog):
   
     @commands.command(name='inventory', aliases=['inv'])
     async def inventory(self, ctx):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             inventorySTR = "You have...\n\n"
             async with ctx.typing():
                 for item in self.items:
@@ -204,7 +204,7 @@ class Economy(commands.Cog):
 
     @commands.command(name='use')
     async def use(self, ctx, item:str):
-        if await in_wom_shenanigans(ctx):
+        if await in_heaven(ctx):
             item = item.lower()
             if item not in self.items:
                 return await error(ctx, "Invalid item")
