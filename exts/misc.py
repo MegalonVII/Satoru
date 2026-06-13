@@ -53,7 +53,7 @@ class Miscellaneous(commands.Cog):
     @commands.command(name='avatar', aliases=['avi'])
     async def avatar(self, ctx, member:discord.Member=None):
         member = member or ctx.author
-        e = discord.Embed(title=f"{member.name}'s Avatar", color=discord.Color.purple())
+        e = discord.Embed(title=f"{member.name}'s Avatar", color=EMBED_COLOR)
         if member.display_avatar.url != member.avatar.url:
             e.set_thumbnail(url=member.avatar.url)
         e.set_image(url=member.display_avatar.url)
@@ -62,7 +62,7 @@ class Miscellaneous(commands.Cog):
     
     @commands.command(name='emote')
     async def emote(self, ctx, emote:discord.Emoji):
-        embed = discord.Embed(color=discord.Color.purple())
+        embed = discord.Embed(color=EMBED_COLOR)
         embed.description=f"**__Emote Information__**\n**URL**: {emote.url}\n**Name**: {emote.name}\n**ID**: {emote.id}"
         embed.set_image(url=emote.url)
         return await ctx.reply(embed=embed, mention_author=False)

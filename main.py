@@ -44,7 +44,7 @@ async def help(ctx, page: str = "home"):
         options = ", ".join(f"`{key}`" for key in HELP_DATA.keys() if key != "home")
         return await error(ctx, f'Invalid page name. Try one of: {options}')
 
-    embed = discord.Embed(color=discord.Color.purple())
+    embed = discord.Embed(color=EMBED_COLOR)
     embed.title = HELP_TITLES.get(page, f"{page.capitalize()} Commands")
 
     commands_list = HELP_DATA[page]["commands"]

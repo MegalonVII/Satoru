@@ -32,6 +32,7 @@ target_counts={}
 cooldowns={"howgay":10.0, "which":10.0, "itt":10.0, "react":5.0, "rps":5.0, "8ball":5.0, "clear":5.0, "trivia":25.0, "slots":10.0, "steal":30.0, 'bet':30.0, 'heist':600.0}
 last_executed={cooldown:{} for cooldown in cooldowns}
 gojowashington='<:gojowashington:1515249454624538686>'
+EMBED_COLOR = discord.Color(0xADD8E6)
 
 def gojo_washington_word(count: int | None = None) -> str:
     if count == 1:
@@ -875,7 +876,7 @@ class TriviaHandlers:
 
     @staticmethod
     def build_trivia_embed(question: str, options: list[str]) -> discord.Embed:
-        quiz_embed = discord.Embed(title="❓ Trivia ❓", description=question, color=discord.Color.purple())
+        quiz_embed = discord.Embed(title="❓ Trivia ❓", description=question, color=EMBED_COLOR)
         quiz_embed.add_field(name="Options", value="\n".join(options), inline=False)
         quiz_embed.set_footer(text="You have 15 seconds to answer. Type the letter of your answer (A, B, C, D).")
         return quiz_embed
@@ -1063,7 +1064,7 @@ class Song:
         self.requester = source.requester
 
     def create_embed(self):
-        embed = (discord.Embed(title='Now playing', description=f'**{self.source.title}**', color=discord.Color.purple())
+        embed = (discord.Embed(title='Now playing', description=f'**{self.source.title}**', color=EMBED_COLOR)
             .add_field( name='Duration', value=self.source.duration)
             .add_field(name='Requested by', value=self.requester.mention)
             .add_field(name='URL', value=f"[Link](<{self.source.url}>)")

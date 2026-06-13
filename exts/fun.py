@@ -44,7 +44,7 @@ class Fun(commands.Cog):
             data = snipe_data[channel.id]
             if data["attachment"] and 'video' in data["attachment"].content_type:
                 data["content"] += f"\n[Attached Video]({data['attachment'].url})"
-            embed = discord.Embed(title=f"Last deleted message in #{channel.name}", color = discord.Color.purple(), description=str(data["content"]))
+            embed = discord.Embed(title=f"Last deleted message in #{channel.name}", color=EMBED_COLOR, description=str(data["content"]))
             if data["attachment"] and 'image' in data["attachment"].content_type:
                 embed.set_image(url=data["attachment"].url)
             embed.set_footer(text=f"This message was sent by {data['author']}")
@@ -58,7 +58,7 @@ class Fun(commands.Cog):
         channel = ctx.channel
         try:
             data = editsnipe_data[channel.id]
-            embed = discord.Embed(title=f"Last edited message in #{channel.name}", color = discord.Color.purple(), description=str(data["content"]))
+            embed = discord.Embed(title=f"Last edited message in #{channel.name}", color=EMBED_COLOR, description=str(data["content"]))
             embed.set_footer(text=f"This message was sent by {data['author']}")
             embed.set_thumbnail(url=data["author"].avatar.url)
             return await ctx.reply(embed=embed, mention_author=False)
@@ -226,7 +226,7 @@ class Fun(commands.Cog):
 
             finalStr = f":heartpulse: **MATCHMAKING** :heartpulse:\n:small_red_triangle_down: `{str1}`\n:small_red_triangle: `{str2}`"
             embed = discord.Embed(
-                color=discord.Color.pink(),
+                color=EMBED_COLOR,
                 title=f"**{merged_string}**",
                 description=f"**{shipPercent}%** {''.join(bar)}{' PERFECT! ❤' if shipPercent == 100 else ''}",
             )
