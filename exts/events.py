@@ -35,9 +35,9 @@ class Events(commands.Cog):
         await MessageHandlers.ping_responses(message, self.reply_choices, self.reactions)
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx, exc):
         if not ctx.message.content.split()[1] in list(lists["commands"].keys()):
-            return await wups(ctx, f'Try ".gojo help" ({error})')
+            return await error(ctx, f'Try ".gojo help" ({exc})')
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):

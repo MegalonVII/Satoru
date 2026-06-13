@@ -167,13 +167,13 @@ def parse_mute_args(args: str) -> tuple[int, str, str]:
 
 async def build_mute_duration(ctx: commands.Context, time_unit: int, time_limit: str) -> Optional[timedelta]:
     if time_unit <= 0:
-        return await wups(ctx, "Time duration has to be 1 or higher")
+        return await error(ctx, "Time duration has to be 1 or higher")
     if time_limit not in MUTE_TIME_LIMITS:
-        return await wups(ctx, f"Invalid measure of time. Has to be one of the following: `{', '.join(MUTE_TIME_LIMITS.keys())}`")
+        return await error(ctx, f"Invalid measure of time. Has to be one of the following: `{', '.join(MUTE_TIME_LIMITS.keys())}`")
 
     attribute, limit = MUTE_TIME_LIMITS[time_limit]
     if time_unit > limit:
-        return await wups(ctx, "Cannot mute member for more than 4 weeks")
+        return await error(ctx, "Cannot mute member for more than 4 weeks")
 
     return timedelta(**{attribute: time_unit})
 
@@ -182,7 +182,7 @@ async def build_mute_duration(ctx: commands.Context, time_unit: int, time_limit:
 async def collect_birthday_and_timezone(bot: commands.Bot, ctx: commands.Context) -> tuple[Optional[str], Optional[object], Optional[str]]:
     # birthday
     bday_timeout_text = "Time's up! You didn't provide me with your birthday in time..."
-    prompt_data = await prompt_for_message(bot, ctx, 'In the next 30 seconds, give me your birthday in the format "MM-DD"!', 30, bday_timeout_text, timeout_wups=False)
+    prompt_data = await prompt_for_message(bot, ctx, 'In the next 30 seconds, give me your birthday in the format "MM-DD"!', 30, bday_timeout_text, timeout_error=False)
     if prompt_data is None:
         return None, None, bday_timeout_text
     prompt1, bday_message = prompt_data
@@ -198,7 +198,7 @@ async def collect_birthday_and_timezone(bot: commands.Bot, ctx: commands.Context
 
     # timezone
     tz_timeout_text = "Time's up! You didn't provide me with your timezone in time..."
-    prompt_data = await prompt_for_message(bot, ctx, "Now, you have 5 minutes to give me the timezone you are based in. Make sure it is one from [this list](<https://gist.githubusercontent.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568/raw/daacf0e4496ccc60a36e493f0252b7988bceb143/pytz-time-zones.py>)!", 300, tz_timeout_text, timeout_wups=False)
+    prompt_data = await prompt_for_message(bot, ctx, "Now, you have 5 minutes to give me the timezone you are based in. Make sure it is one from [this list](<https://gist.githubusercontent.com/heyalexej/8bf688fd67d7199be4a1682b3eec7568/raw/daacf0e4496ccc60a36e493f0252b7988bceb143/pytz-time-zones.py>)!", 300, tz_timeout_text, timeout_error=False)
     if prompt_data is None:
         return None, None, tz_timeout_text
     prompt2, tz_message = prompt_data
@@ -570,7 +570,7 @@ class MessageHandlers:
                     await shark_react(message)
             else:
                 await shark_react(message)
-                await message.reply("Wups! I need to be nicknamed \"Wrok\" for this to work...", mention_author=False)
+                await message.reply("Upsie-daisy! I need to be nicknamed \"Wrok\" for this to work...", mention_author=False)
             return
         
         # general ping pattern
@@ -597,7 +597,7 @@ class EconomyUseHandlers:
             return await EconomyUseHandlers._use_shell(ctx, item)
         if item == "banana":
             return await EconomyUseHandlers._use_banana(ctx, item)
-        return await wups(ctx, "Invalid item")
+        return await error(ctx, "Invalid item")
 
     @staticmethod
     async def _use_bomb(ctx: commands.Context, item: str):
@@ -610,7 +610,7 @@ class EconomyUseHandlers:
             if stolen_funds(target_id, stolen):
                 direct_to_bank(ctx.author.id, stolen)
                 return await reply(ctx, f"Stole {stolen} {gojo_washington_word(stolen)} {gojowashington} from {member.name}'s bank account! That {gojo_washington_word()} has been deposited into your bank account!")
-        return await wups(ctx, f"You don't have a {item}")
+        return await error(ctx, f"You don't have a {item}")
 
     @staticmethod
     async def _use_ticket(bot: commands.Bot, ctx: commands.Context, item: str):
@@ -624,7 +624,7 @@ class EconomyUseHandlers:
             role = await ctx.guild.create_role(name=name)
             await ctx.author.add_roles(role)
             return await msg.reply("Congrats on your new role!")
-        return await wups(ctx, f"You don't have a {item}")
+        return await error(ctx, f"You don't have a {item}")
 
     @staticmethod
     async def _use_letter(bot: commands.Bot, ctx: commands.Context, item: str):
@@ -642,7 +642,7 @@ class EconomyUseHandlers:
             if recipient is None or recipient.bot or recipient == ctx.author:
                 add_item(item, ctx.author.id, 1)
                 await msg.delete()
-                return await wups(ctx, f"Invalid member name. I've refunded you your {item}")
+                return await error(ctx, f"Invalid member name. I've refunded you your {item}")
 
             prompt_data = await prompt_for_message(bot, ctx, "Great! Now you have 2 minutes to cook up your letter to this person. Your next message in this channel will dictate that!", 120, f"Time's up! You didn't provide me with any content, so I've given you back your {item}...")
             if prompt_data is None:
@@ -658,7 +658,7 @@ class EconomyUseHandlers:
                 await ctx.guild.system_channel.send(f"Since {recipient.mention} won't allow me to DM them, I guess I'll just have to air out to the entire world their letter from {ctx.author.name}...\n\n'{content_replaced}'")
             await content.reply("Message sent!")
             return await content.delete()
-        return await wups(ctx, f"You don't have a {item}")
+        return await error(ctx, f"You don't have a {item}")
 
     @staticmethod
     async def _use_shell(ctx: commands.Context, item: str):
@@ -671,7 +671,7 @@ class EconomyUseHandlers:
             if subtract_coins(target.id, int(balance // 2)):
                 add_coins(ctx.author.id, int(balance // 2))
                 return await reply(ctx, f"{target.name} got hit by a {item}! You received {balance // 2} {gojo_washington_word(balance // 2)} {gojowashington} from them!")
-        return await wups(ctx, f"You don't have a {item}")
+        return await error(ctx, f"You don't have a {item}")
 
     @staticmethod
     async def _use_banana(ctx: commands.Context, item: str):
@@ -679,7 +679,7 @@ class EconomyUseHandlers:
             msg = await ctx.reply("You ate a banana! You feel something funny inside your body...")
             await asyncio.sleep(3)
             return await msg.edit(content="Turns out that was just your stomach growling. The banana you just ate was a regular old banana...", allowed_mentions=discord.AllowedMentions.none())
-        return await wups(ctx, f"You don't have a {item}")
+        return await error(ctx, f"You don't have a {item}")
 
 # grabber() handler class
 class MusicDownloadHandlers:
@@ -751,7 +751,7 @@ class MusicDownloadHandlers:
             except Exception:
                 os.remove(file_path)
                 await msg.delete()
-                return await wups(ctx, "The file was too big for me to send")
+                return await error(ctx, "The file was too big for me to send")
             os.remove(file_path)
         return await msg.delete()
 
@@ -1034,22 +1034,22 @@ class YTDLSource(discord.PCMVolumeTransformer):
         stdout, stderr = await proc.communicate()
         if proc.returncode != 0:
             stderr_str = stderr.decode(errors='replace').strip()
-            raise YTDLError(f'Wups! yt-dlp failed: {stderr_str or "unknown error"}')
+            raise YTDLError(f'Upsie-daisy! yt-dlp failed: {stderr_str or "unknown error"}')
 
         stdout_str = stdout.decode(errors='replace').strip()
         if not stdout_str:
-            raise YTDLError("Wups! yt-dlp returned no data")
+            raise YTDLError("Upsie-daisy! yt-dlp returned no data")
 
         try:
             return json.loads(stdout_str)
         except json.JSONDecodeError:
-            raise YTDLError("Wups! Couldn't parse yt-dlp output")
+            raise YTDLError("Upsie-daisy! Couldn't parse yt-dlp output")
 
     @classmethod
     async def create_source(cls, ctx: commands.Context, search: str, *, loop: asyncio.BaseEventLoop = None):
         data = await cls._extract_info(search)
         if data is None:
-            raise YTDLError(f"Wups! Couldn\'t find anything that matches `{search}`")
+            raise YTDLError(f"Upsie-daisy! Couldn\'t find anything that matches `{search}`")
 
         if 'entries' in data:
             info = None
@@ -1061,7 +1061,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             info = data
 
         if not info:
-            raise YTDLError(f"Wups! Couldn\'t find anything that matches `{search}`")
+            raise YTDLError(f"Upsie-daisy! Couldn\'t find anything that matches `{search}`")
 
         return cls(
             ctx,
@@ -1264,14 +1264,14 @@ def update_birthday(user_id: int, birthdate: str, tz: str):
 async def reply(ctx, content: str):
     return await ctx.reply(content, mention_author=False)
 
-async def prompt_for_message(bot: commands.Bot, ctx: commands.Context, prompt_text: str, timeout: float, timeout_text: str, timeout_wups: bool = True) -> Optional[tuple[discord.Message, discord.Message]]:
+async def prompt_for_message(bot: commands.Bot, ctx: commands.Context, prompt_text: str, timeout: float, timeout_text: str, timeout_error: bool = True) -> Optional[tuple[discord.Message, discord.Message]]:
     prompt = await reply(ctx, prompt_text)
     try:
         message = await bot.wait_for("message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel, timeout=timeout)
     except asyncio.TimeoutError:
         await prompt.delete()
-        if timeout_wups:
-            await wups(ctx, timeout_text)
+        if timeout_error:
+            await error(ctx, timeout_text)
         return None
     return prompt, message
 
@@ -1554,9 +1554,9 @@ def capitalize_string(string: str) -> str:
 async def shark_react(message: discord.Message):
     return await message.add_reaction('🦈')
 
-async def wups(ctx, content: str):
+async def error(ctx, content: str):
     await shark_react(ctx.message)
-    return await reply(ctx, content=f"Wups! {content}...")
+    return await reply(ctx, content=f"Upsie-daisy! {content}...")
 
 def load_info(info: str):
     file_path = os.path.join(os.path.dirname(__file__), "docs", f"{info}.txt")

@@ -118,15 +118,15 @@ class Music(commands.Cog):
             print(f'{Style.BRIGHT}Joined {Style.RESET_ALL}{Fore.BLUE}{ctx.author.voice.channel.name}{Fore.RESET}')
             return await ctx.message.add_reaction('✅')
         except:
-            return await wups(ctx, 'I couldn\'t connect to your voice channel. Maybe you\'re not in one or I\'m in a different one')
+            return await error(ctx, 'I couldn\'t connect to your voice channel. Maybe you\'re not in one or I\'m in a different one')
       
     @commands.command(name='leave')
     async def _leave(self, ctx: commands.Context):
         if not ctx.voice_state.voice:
-            return await wups(ctx, 'I\'m not connected to any voice channel')
+            return await error(ctx, 'I\'m not connected to any voice channel')
         if ctx.voice_client:
             if ctx.author.voice is None or ctx.voice_client.channel != ctx.author.voice.channel:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         
         channel_name = ctx.voice_state.voice.channel.name if ctx.voice_state.voice and ctx.voice_state.voice.channel else "voice channel"
         
@@ -143,41 +143,41 @@ class Music(commands.Cog):
         if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             return await ctx.reply(embed=ctx.voice_state.current.create_embed(), mention_author=False)
         else:
-            return await wups(ctx, 'I\'m currently not playing anything')
+            return await error(ctx, 'I\'m currently not playing anything')
 
     @commands.command(name='pause')
     async def _pause(self, ctx: commands.Context):
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel or ctx.author.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
             return await ctx.message.add_reaction('⏸️')
         else:
-            return await wups(ctx, 'Nothing to pause')
+            return await error(ctx, 'Nothing to pause')
 
     @commands.command(name='resume')
     async def _resume(self, ctx: commands.Context):
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel or ctx.author.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
             return await ctx.message.add_reaction('▶️')
         else:
-            return await wups(ctx, 'Nothing to resume')
+            return await error(ctx, 'Nothing to resume')
 
     @commands.command(name='stop')
     async def _stop(self, ctx: commands.Context):
         if ctx.voice_client:
             if ctx.author.voice and ctx.voice_client.channel != ctx.author.voice.channel or ctx.author.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if ctx.voice_state.is_playing:
             ctx.voice_state.songs.clear()
             ctx.voice_state.voice.stop()
             return await ctx.message.add_reaction('⏹️')
         else:
-            return await wups(ctx, 'I\'m not playing any music right now')
+            return await error(ctx, 'I\'m not playing any music right now')
 
     @commands.command(name='skip')
     async def _skip(self, ctx: commands.Context):
@@ -185,25 +185,25 @@ class Music(commands.Cog):
         djRole = discord.utils.get(ctx.guild.roles, name="DJ")
         if ctx.voice_client:
             if ctx.voice_client.channel != voter.voice.channel or voter.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if not ctx.voice_state.is_playing:
-            return await wups(ctx, 'I\'m not playing any music right now')
+            return await error(ctx, 'I\'m not playing any music right now')
         if voter == ctx.voice_state.current.requester or djRole in voter.roles or voter.guild_permissions.administrator:
             ctx.voice_state.skip()
             return await ctx.message.add_reaction('⏭️')
         else:
-            return await wups(ctx, 'You didn\'t request this song to be played (DJs and adminstrators are unaffected)')
+            return await error(ctx, 'You didn\'t request this song to be played (DJs and adminstrators are unaffected)')
 
     @commands.command(name='queue')
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
         if page < 1:
-            return await wups(ctx, 'Invalid page number. Must be greater than or equal to `1`')
+            return await error(ctx, 'Invalid page number. Must be greater than or equal to `1`')
         if len(ctx.voice_state.songs) == 0:
-            return await wups(ctx, 'Queue is empty')
+            return await error(ctx, 'Queue is empty')
         items_per_page = 10
         pages = math.ceil(len(ctx.voice_state.songs) / items_per_page)
         if page > pages:
-            return await wups(ctx, f'Invalid page number. Must be less than or equal to `{pages}`')
+            return await error(ctx, f'Invalid page number. Must be less than or equal to `{pages}`')
         
         start = (page - 1) * items_per_page
         end = start + items_per_page
@@ -221,26 +221,26 @@ class Music(commands.Cog):
 
         if ctx.voice_client:
             if ctx.voice_client.channel != author.voice.channel or author.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if author.guild_permissions.administrator or djRole in author.roles:
             if len(ctx.voice_state.songs) == 0:
-                return await wups(ctx, 'Queue is empty')
+                return await error(ctx, 'Queue is empty')
             else:
                 ctx.voice_state.songs.shuffle()
                 return await ctx.message.add_reaction('🔀')
         else:
-            return await wups(ctx, 'You don\'t have the permissions to use this. Must be either a DJ or administrator')
+            return await error(ctx, 'You don\'t have the permissions to use this. Must be either a DJ or administrator')
 
     @commands.command(name='remove')
     async def _remove(self, ctx: commands.Context, index: int):
         queue = ctx.voice_state.songs
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel or ctx.author.voice is None:
-                return await wups(ctx, 'You\'re not in my voice channel')
+                return await error(ctx, 'You\'re not in my voice channel')
         if len(queue) == 0:
-            return await wups(ctx, 'Queue is empty')
+            return await error(ctx, 'Queue is empty')
         elif index < 0 or index == 0 or index > len(queue):
-            return await wups(ctx, 'Index out of bounds')
+            return await error(ctx, 'Index out of bounds')
         ctx.voice_state.songs.remove(index - 1)
         return await ctx.message.add_reaction('✅')
 
@@ -250,19 +250,19 @@ class Music(commands.Cog):
         djRole = discord.utils.get(ctx.guild.roles, name="DJ")
 
         if ctx.voice_client and (ctx.author.voice is None or ctx.voice_client.channel != ctx.author.voice.channel):
-            return await wups(ctx, 'You\'re not in my voice channel')
+            return await error(ctx, 'You\'re not in my voice channel')
         if not (ctx.author.guild_permissions.administrator or (djRole and djRole in ctx.author.roles)):
-            return await wups(ctx, 'You don\'t have the permissions to use this. Must be either a DJ or administrator')
+            return await error(ctx, 'You don\'t have the permissions to use this. Must be either a DJ or administrator')
 
         q_len = len(queue)
         if q_len == 0:
-            return await wups(ctx, 'Queue is empty')
+            return await error(ctx, 'Queue is empty')
         if from_index < 1 or from_index > q_len:
-            return await wups(ctx, f'Source index out of bounds (must be between 1 and {q_len})')
+            return await error(ctx, f'Source index out of bounds (must be between 1 and {q_len})')
         if to_index < 1 or to_index > q_len:
-            return await wups(ctx, f'Destination index out of bounds (must be between 1 and {q_len})')
+            return await error(ctx, f'Destination index out of bounds (must be between 1 and {q_len})')
         if from_index == to_index:
-            return await wups(ctx, 'Source and destination positions are the same')
+            return await error(ctx, 'Source and destination positions are the same')
 
         from_pos, to_pos = from_index - 1, to_index - 1
         song = queue._queue[from_pos]
@@ -273,18 +273,18 @@ class Music(commands.Cog):
     @commands.command(name='play')
     async def _play(self, ctx: commands.Context, *, search: str):
         if not ctx.voice_state.voice: # bot not in vc at all
-            return await wups(ctx, 'I\'m not connected to a voice channel')
+            return await error(ctx, 'I\'m not connected to a voice channel')
         if ctx.voice_client:
             if ctx.author.voice is None: # user not in vc at all but bot is
-                return await wups(ctx, 'You\'re not connected to a voice channel')
+                return await error(ctx, 'You\'re not connected to a voice channel')
             elif ctx.voice_client.channel != ctx.author.voice.channel: # user in different vc than bot
-                return await wups(ctx, 'I\'m already in a different voice channel')
+                return await error(ctx, 'I\'m already in a different voice channel')
             
         async with ctx.typing():
             try:
                 source = await YTDLSource.create_source(ctx, search)
             except YTDLError as e:
-                return await wups(ctx, f'An error occurred while processing this request (`{str(e)}`)')
+                return await error(ctx, f'An error occurred while processing this request (`{str(e)}`)')
             else:
                 song = Song(source)
                 await ctx.voice_state.songs.put(song)
@@ -294,11 +294,11 @@ class Music(commands.Cog):
     async def _grabber(self, ctx, platform: str, *query):
         platform_lower = platform.lower()
         if platform_lower not in self.platforms:
-            return await wups(ctx, "Invalid platform choice! Must be either `Spotify`, `YouTube`, or `SoundCloud`")
+            return await error(ctx, "Invalid platform choice! Must be either `Spotify`, `YouTube`, or `SoundCloud`")
 
         query, err = MusicDownloadHandlers.normalize_grabber_query(query, platform_lower)
         if err:
-            return await wups(ctx, err)
+            return await error(ctx, err)
 
         if await in_channels(ctx, ["wom-shenanigans", "good-tunes"], True):
             async with ctx.typing():
@@ -311,10 +311,10 @@ class Music(commands.Cog):
                 else:
                     spec = MusicDownloadHandlers.soundcloud(query)
 
-                success, error = await MusicDownloadHandlers.run_download(spec)
+                success, err = await MusicDownloadHandlers.run_download(spec)
                 if not success:
                     await msg.delete()
-                    return await wups(ctx, error)
+                    return await error(ctx, err)
 
                 return await MusicDownloadHandlers.send_downloaded_files(ctx, msg)
 
@@ -322,14 +322,14 @@ class Music(commands.Cog):
     async def _mix(self, ctx: commands.Context, music_volume: Optional[int] = None, tts_volume: Optional[int] = None):
         djRole = discord.utils.get(ctx.guild.roles, name="DJ")
         if not (ctx.author.guild_permissions.administrator or (djRole and djRole in ctx.author.roles)):
-            return await wups(ctx, "You don't have the permissions to use this. Must be either a DJ or administrator")
+            return await error(ctx, "You don't have the permissions to use this. Must be either a DJ or administrator")
 
         current_music, current_tts = MusicMixHandlers.load_current_mix_levels()
-        mode, music_scalar, tts_scalar, error = MusicMixHandlers.resolve_mix_inputs(music_volume, tts_volume, current_music, current_tts)
+        mode, music_scalar, tts_scalar, err = MusicMixHandlers.resolve_mix_inputs(music_volume, tts_volume, current_music, current_tts)
         if mode == "current":
             return await reply(ctx, f'Current mix levels — Music: `{int(current_music * 100)}%`, TTS: `{int(current_tts * 100)}%`')
         if mode == "error":
-            return await wups(ctx, error)
+            return await error(ctx, err)
 
         MusicMixHandlers.persist_mix_levels(music_scalar, tts_scalar)
         MusicMixHandlers.apply_mix_to_voice_state(ctx.voice_state, music_scalar, tts_scalar)
@@ -346,7 +346,7 @@ class Music(commands.Cog):
         key = choice.strip().lower().replace(" ", "")
         voice_id = tts_voice_aliases.get(key)
         if voice_id is None:
-            return await wups(ctx, f"Unknown voice. Use one of: `male 1`, `male 2`, `male 3`, `female 1`, `female 2`, `female 3`")
+            return await error(ctx, f"Unknown voice. Use one of: `male 1`, `male 2`, `male 3`, `female 1`, `female 2`, `female 3`")
         set_voice(ctx.author.id, voice_id)
         alias = voice_id_to_alias[voice_id]
         return await reply(ctx, f"Your TTS voice is now **{alias}**!")
@@ -354,17 +354,17 @@ class Music(commands.Cog):
     @commands.command(name='tts')
     async def _tts(self, ctx: commands.Context, *, message: str):
         if not ctx.voice_state.voice: # bot not in vc at all
-            return await wups(ctx, 'I\'m not connected to a voice channel')
+            return await error(ctx, 'I\'m not connected to a voice channel')
         if ctx.voice_client:
             if ctx.author.voice is None: # user not in vc at all but bot is
-                return await wups(ctx, 'You\'re not connected to a voice channel')
+                return await error(ctx, 'You\'re not connected to a voice channel')
             elif ctx.voice_client.channel != ctx.author.voice.channel: # user in different vc than bot
-                return await wups(ctx, 'I\'m already in a different voice channel')
+                return await error(ctx, 'I\'m already in a different voice channel')
         
         success, err = await enqueue_tts_message(ctx, message, self.tts_queue, self.tts_processing, lambda: self.bot.loop.create_task(self.process_tts_queue(ctx.voice_state)))
         
         if not success:
-            return await wups(ctx, err)
+            return await error(ctx, err)
         return await ctx.message.add_reaction('✅')
 
 

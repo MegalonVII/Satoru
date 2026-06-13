@@ -16,7 +16,7 @@ class Birthday(commands.Cog):
         if await in_wom_shenanigans(ctx):
             bday, tz_obj, err = await collect_birthday_and_timezone(self.bot, ctx)
             if err:
-                return await wups(ctx, err)
+                return await error(ctx, err)
             return await reply(ctx, f'Birthday set for {bday} in {tz_obj}!')
             
     @commands.command(name='birthdaylist', aliases=['bdaylist', 'bdl'])

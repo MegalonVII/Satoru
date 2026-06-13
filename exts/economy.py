@@ -21,9 +21,9 @@ class Economy(commands.Cog):
     async def slots(self, ctx):
         if await in_wom_shenanigans(ctx):
             if assert_cooldown('slots', ctx.author.id) != 0:
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('slots', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('slots', ctx.author.id)} seconds")
             if not subtract_coins(ctx.author.id, 10):
-                return await wups(ctx, f"You don't have enough {gojo_washington_word()} to play")
+                return await error(ctx, f"You don't have enough {gojo_washington_word()} to play")
         
             emojis = ["🍒", "🍇", "🍊", "🍋", "🍉", "🫐", "7️⃣"]
             reels = ["❓"] * 3
@@ -40,7 +40,7 @@ class Economy(commands.Cog):
     async def bet(self, ctx, amount:int):
         if await in_wom_shenanigans(ctx):
             if assert_cooldown('bet', ctx.author.id) != 0:
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('bet', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('bet', ctx.author.id)} seconds")
             if subtract_coins(ctx.author.id, amount):
                 roll = random.randint(1,6)
                 roll2 = random.randint(1,6)
@@ -49,17 +49,17 @@ class Economy(commands.Cog):
                     add_coins(ctx.author.id, 2*amount)
                     return await reply(ctx, f"You rolled a {result}! You win!")
                 return await reply(ctx, f"You rolled a {result}! Sorry, you lost...")
-            return await wups(ctx, f"You can't bet that much {gojo_washington_word()} as you don't have that much")
+            return await error(ctx, f"You can't bet that much {gojo_washington_word()} as you don't have that much")
 
     @commands.command(name='steal')
     async def steal(self, ctx, target: discord.Member):
         if await in_wom_shenanigans(ctx):
             if target.bot or target == ctx.author:
-                return await wups(ctx, "You can't steal from a bot or from yourself")
+                return await error(ctx, "You can't steal from a bot or from yourself")
             if not steal_target_tracking(ctx.author.id, target, update_counts=False):
-                return await wups(ctx, "You can't target this person again so soon. Choose a different target")
+                return await error(ctx, "You can't target this person again so soon. Choose a different target")
             if assert_cooldown('steal', ctx.author.id) != 0:
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('steal', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('steal', ctx.author.id)} seconds")
 
             # tracks if someone is specifiically targetting another person
             steal_target_tracking(ctx.author.id, target, update_counts=True)
@@ -81,7 +81,7 @@ class Economy(commands.Cog):
     async def heist(self, ctx):
         if await in_wom_shenanigans(ctx):
             if assert_cooldown("heist", ctx.author.id) != 0:
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('heist', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('heist', ctx.author.id)} seconds")
             if random.randint(1, 100) == 1: # successful heist
                 total = 0
                 for key in lists['bank'].keys():
@@ -106,14 +106,14 @@ class Economy(commands.Cog):
         if await in_wom_shenanigans(ctx):
             if dep(ctx.author.id, amt):
                 return await reply(ctx, f"Successfully deposited {amt} {gojo_washington_word(amt)} {gojowashington}!")
-            return await wups(ctx, "Insufficient funds")
+            return await error(ctx, "Insufficient funds")
 
     @commands.command(name='withdraw', aliases=['wd'])
     async def withdraw(self, ctx, amt:int):
         if await in_wom_shenanigans(ctx):
             if wd(ctx.author.id, amt):
                 return await reply(ctx, f"Successfully withdrew {amt} {gojo_washington_word(amt)} {gojowashington}!")
-            return await wups(ctx, "Insufficient funds")
+            return await error(ctx, "Insufficient funds")
 
     @commands.command(name='balance', aliases=['bal'])
     async def balance(self, ctx, member:discord.Member = None):
@@ -122,14 +122,14 @@ class Economy(commands.Cog):
             if subtract_coins(ctx.author.id, 10):
                 add_coins(member.id, 10)
             else:
-                return await wups(ctx, "Insufficient funds")
+                return await error(ctx, "Insufficient funds")
         for userID in lists['coins'].keys():
             if str(member.id) == userID:
                 balance = int(lists['coins'][str(member.id)])
                 if not member == ctx.author:
                     return await reply(ctx, f"{member.name} has {balance} {gojo_washington_word(balance)} {gojowashington}!")
                 return await reply(ctx, f"You have {balance} {gojo_washington_word(balance)} {gojowashington}!")
-        return await wups(ctx, "Get some bread, broke ass")
+        return await error(ctx, "Get some bread, broke ass")
 
     @commands.command(name='bankbalance', aliases=['bankbal'])
     async def bankbalance(self, ctx):
@@ -137,19 +137,19 @@ class Economy(commands.Cog):
             if str(ctx.author.id) == userID:
                 balance = int(lists['bank'][str(ctx.author.id)])
                 return await reply(ctx, f"You have {balance} {gojo_washington_word(balance)} {gojowashington} in the bank!")
-        return await wups("Get some bread, broke ass")
+        return await error(ctx, "Get some bread, broke ass")
 
     @commands.command(name='paypal')
     async def paypal(self, ctx, recipient:discord.Member, amount:int):
         if await in_wom_shenanigans(ctx):
             if amount <= 0:
-                return await wups(ctx, "Invalid payment amount")
+                return await error(ctx, "Invalid payment amount")
             if recipient.bot or recipient.id == ctx.author.id:
-                return await wups(ctx, "You can't pay a bot or yourself")
+                return await error(ctx, "You can't pay a bot or yourself")
             if subtract_coins(ctx.author.id,amount):
                 add_coins(recipient.id,amount)
                 return await reply(ctx, f"{recipient.name} has received {amount} {gojo_washington_word(amount)} {gojowashington} from you!")
-            return await wups(ctx, f"You don't have that much {gojo_washington_word()}")
+            return await error(ctx, f"You don't have that much {gojo_washington_word()}")
 
     @commands.command(name='marketplace', aliases=['mp'])
     async def marketplace(self, ctx):
@@ -164,21 +164,21 @@ class Economy(commands.Cog):
     async def buy(self, ctx, item:str, number:int = 1):
         if await in_wom_shenanigans(ctx):
             if number < 1:
-                return await wups(ctx, "Invalid number requested")
+                return await error(ctx, "Invalid number requested")
             item = item.lower()
             for item_name, item_price in zip(self.items, self.prices):
                 if item.lower() == item_name:
                     if not subtract_coins(ctx.author.id, number * item_price):
-                        return await wups(ctx, f"You don't have enough {gojo_washington_word()}")
+                        return await error(ctx, f"You don't have enough {gojo_washington_word()}")
                     add_item(item, ctx.author.id, number)
                     return await reply(ctx, f"You have successfully purchased {number} {item_name}{"s" if number > 1 else ""}!")
-            return await wups(ctx, "Invalid item")
+            return await error(ctx, "Invalid item")
 
     @commands.command(name='sell')
     async def sell(self, ctx, item:str, number:int = 1):
         if await in_wom_shenanigans(ctx):
             if number < 1:
-                return await wups(ctx, "Invalid number requested")
+                return await error(ctx, "Invalid number requested")
             item = item.lower()
             for name, price in zip(self.items, self.prices):
                 sell = price // 2
@@ -190,8 +190,8 @@ class Economy(commands.Cog):
                             return await reply(ctx, f'Successfully sold {number} {item}! {payout} {gojo_washington_word(payout)} {gojowashington}!')
                         else:
                             return await reply(ctx, f'Successfully sold {number} {item}s! {payout} {gojo_washington_word(payout)} {gojowashington}!')
-                    return await wups(ctx, f"You don't have that many {item}s") 
-            return await wups(ctx, "Invalid item")
+                    return await error(ctx, f"You don't have that many {item}s") 
+            return await error(ctx, "Invalid item")
   
     @commands.command(name='inventory', aliases=['inv'])
     async def inventory(self, ctx):
@@ -207,7 +207,7 @@ class Economy(commands.Cog):
         if await in_wom_shenanigans(ctx):
             item = item.lower()
             if item not in self.items:
-                return await wups(ctx, "Invalid item")
+                return await error(ctx, "Invalid item")
             return await EconomyUseHandlers.handle(self.bot, ctx, item)
 
 async def setup(bot):

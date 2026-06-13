@@ -48,7 +48,7 @@ class Miscellaneous(commands.Cog):
         try:
             return await reply(ctx, ", ".join([member.name for member in ctx.guild.members if member.is_timed_out()]))
         except:
-            return await wups(ctx, "No one is muted currently", mention_author=False)
+            return await error(ctx, "No one is muted currently", mention_author=False)
     
     @commands.command(name='avatar', aliases=['avi'])
     async def avatar(self, ctx, member:discord.Member=None):
@@ -79,7 +79,7 @@ class Miscellaneous(commands.Cog):
             new_unit = unit_mapping.get(new_unit, new_unit)
             return await reply(ctx, f"{value} {org_unit} is equal to {result:.2f} {new_unit}.")
         else:
-            return await wups(ctx, "Invalid conversion")
+            return await error(ctx, "Invalid conversion")
             
     @commands.command(name='translate')
     async def translate(self, ctx, *, phrase):
@@ -87,7 +87,7 @@ class Miscellaneous(commands.Cog):
             process = await create_subprocess_shell(f'trans -b :en "{phrase}"', stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = await process.communicate()
             if stderr:
-                return await wups(ctx, f"A translation error occurred. ({stderr.decode().strip()})")
+                return await error(ctx, f"A translation error occurred. ({stderr.decode().strip()})")
             return await reply(ctx, f"Translated: {stdout.decode().strip()}\n\n*Beware of some inaccuracies. I cannot be 100% accurate...*")
     
     @commands.command(name='uptime')
@@ -98,10 +98,10 @@ class Miscellaneous(commands.Cog):
             except Exception:
                 pass
 
-            if ctx.author.id == 347503746835546134 or "wom coder" in [role.name for role in ctx.author.roles] : # neel user id
+            if ctx.author.id == 347503746835546134: # neel user id
                 return await ctx.send(f"Uptime: {get_uptime_text()}", delete_after=5)
             else:
-                return await ctx.send("Wups! You are not authorized to use this command...", delete_after=5)
+                return await ctx.send("Upsie-daisy! You are not authorized to use this command...", delete_after=5)
 
     @commands.command(name='currency')
     async def currency(self, ctx, amount: float, from_curr: str, to_curr: str):
@@ -111,14 +111,14 @@ class Miscellaneous(commands.Cog):
         for code in (from_curr, to_curr):
             if code not in self.currencies:
                 supported = ", ".join(self.currencies.keys())
-                return await wups(ctx, f"{code} isn't supported. Available: `{supported}`")
+                return await error(ctx, f"{code} isn't supported. Available: `{supported}`")
 
         if from_curr == to_curr:
-            return await wups(ctx, "I cannot convert a currency to itself")
+            return await error(ctx, "I cannot convert a currency to itself")
 
         rate = await get_rate(ctx, from_curr, to_curr)
         if rate is None:
-            return await wups(ctx, "Could not fetch exchange rates. Try again later")
+            return await error(ctx, "Could not fetch exchange rates. Try again later")
 
         converted = amount * rate
         from_sym = self.currencies[from_curr]

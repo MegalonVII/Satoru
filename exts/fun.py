@@ -28,14 +28,14 @@ class Fun(commands.Cog):
             await ctx.message.delete()
             return await ctx.channel.send(" ".join(args).replace('"', '\"').replace("'", "\'"), allowed_mentions=discord.AllowedMentions(everyone=False, roles=False))
         except:
-            return await wups(ctx, "You need something for me to say")
+            return await error(ctx, "You need something for me to say")
                 
     @commands.command(name='customcommands', aliases=['custc'])
     async def customcommands(self, ctx):
         try:
             return await reply(ctx, ', '.join(list(lists["commands"].keys())))
         except:
-            return await wups(ctx, 'There are no custom commands')
+            return await error(ctx, 'There are no custom commands')
 
     @commands.command(name='snipe')
     async def snipe(self, ctx):
@@ -51,7 +51,7 @@ class Fun(commands.Cog):
             embed.set_thumbnail(url=data['author'].avatar.url)
             return await ctx.reply(embed=embed, mention_author=False)
         except KeyError:
-            return await wups(ctx, f"There are no recently deleted messages in <#{channel.id}>")
+            return await error(ctx, f"There are no recently deleted messages in <#{channel.id}>")
 
     @commands.command(name='editsnipe', aliases=['esnipe'])
     async def editsnipe(self, ctx):
@@ -63,18 +63,18 @@ class Fun(commands.Cog):
             embed.set_thumbnail(url=data["author"].avatar.url)
             return await ctx.reply(embed=embed, mention_author=False)
         except KeyError:
-            return await wups(ctx, f"There are no recently edited messages in <#{channel.id}>")
+            return await error(ctx, f"There are no recently edited messages in <#{channel.id}>")
 
     @commands.command(name='choose')
     async def choose(self, ctx, *args):
         if (len(args) < 2):
-            return await wups(ctx, "You need at least 2 arguments for me to choose from")
+            return await error(ctx, "You need at least 2 arguments for me to choose from")
         return await reply(ctx, f"I choose `{random.choice(args)}`!")
 
     @commands.command(name='pokedex')
     async def pokedex(self, ctx, index: int):
         if index > 1017 or index < 1:
-            return await wups(ctx, "Invalid index")
+            return await error(ctx, "Invalid index")
           
         async with ctx.typing():
             # data collections
@@ -99,7 +99,7 @@ class Fun(commands.Cog):
     @commands.command(name='howgay')
     async def howgay(self, ctx, member:discord.Member=None):
         if assert_cooldown("howgay", ctx.author.id) != 0:
-            return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('howgay', ctx.author.id)} seconds")
+            return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('howgay', ctx.author.id)} seconds")
     
         member = member or ctx.author
         percent = random.randint(0,100)
@@ -119,14 +119,14 @@ class Fun(commands.Cog):
     async def rps(self, ctx, playerChoice: str=None):
         if await in_wom_shenanigans(ctx):
             if assert_cooldown("rps", ctx.author.id) != 0 :
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('rps', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('rps', ctx.author.id)} seconds")
             if playerChoice is None:
-                return await wups(ctx, "You need to give me your choice")
+                return await error(ctx, "You need to give me your choice")
             
             playerChoice = playerChoice.lower()
             choices = ['rock', 'paper', 'scissors']
             if playerChoice not in choices:
-                return await wups(ctx, "Invalid choice")
+                return await error(ctx, "Invalid choice")
             else:
                 botChoice = random.choice(choices)
                 if playerChoice == botChoice: # both tie
@@ -141,9 +141,9 @@ class Fun(commands.Cog):
     @commands.command(name='8ball')
     async def eightball(self, ctx):
         if assert_cooldown("8ball", ctx.author.id) != 0 :
-            return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('8ball', ctx.author.id)} seconds")
+            return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('8ball', ctx.author.id)} seconds")
         if len(ctx.message.content) < 9:
-            return await wups(ctx, "You need to give me a question to respond to")
+            return await error(ctx, "You need to give me a question to respond to")
         
         responses = ['Hell yeah!', 'It is certain.', 'Without a doubt.', 'You may rely on it.', 'Yes, definitely.', 'It is decidedly so.', 'As I see it, yes.', 'Most likely.', 'Yes.', 'Outlook good.', 'Signs point to yes.', 'You already know the answer.', 'Reply hazy, try again.', 'Better not tell you now.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'Outlook not so good.', 'My sources say no.', 'Very doubtful.', 'My reply is no.', 'No.', 'Oh god, no.']
         return await reply(ctx, f"🎱 `{ctx.message.content[9:]}` 🎱\n{random.choice(responses)}")
@@ -152,13 +152,13 @@ class Fun(commands.Cog):
     async def trivia(self, ctx, type:str = None):
         if await in_wom_shenanigans(ctx):
             if assert_cooldown("trivia", ctx.author.id) != 0:
-                return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('trivia', ctx.author.id)} seconds")
+                return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('trivia', ctx.author.id)} seconds")
 
             category_id, err = TriviaHandlers.resolve_trivia_category(type)
             if err:
-                return await wups(ctx, err)
+                return await error(ctx, err)
             if category_id is None:
-                return await wups(ctx, "Invalid trivia type")
+                return await error(ctx, "Invalid trivia type")
 
             async with ctx.typing():
                 question, correct_answer, options = TriviaHandlers.fetch_trivia(category_id)
@@ -184,7 +184,7 @@ class Fun(commands.Cog):
             if console == "guide":
                 return await reply(ctx, "# __Emulation Wiki__\n\n## This is a wiki on how to get emulators for various systems set up on a PC!\n\n__**List of Valid Consoles**__ (enter as `.gojo emulation (console name)`)\n- NES\n- SNES\n- N64\n- GameCube\n- Wii\n- Wii U (enter as \"WiiU\")\n- GameBoy (enter as \"GB\")\n- GameBoy Color (enter as \"GBC\")\n- GameBoy Advance (enter as \"GBA\")\n- DS\n- 3DS\n- Switch\n- PS1\n- PS2\n- PS3\n- PSP\n- PS Vita (enter as \"PSVita\")\n- Master System (enter as \"MasterSystem\")\n- Genesis\n- Saturn\n- Dreamcast\n- Xbox")
             elif console.lower() not in self.consoles.keys():
-                return await wups(ctx, "You entered a console that isn't on the list of valid consoles. Please refer to the list by entering `.gojo emulation`")
+                return await error(ctx, "You entered a console that isn't on the list of valid consoles. Please refer to the list by entering `.gojo emulation`")
 
             for key, value in self.consoles.items():
                 if console.lower() == key:
@@ -201,9 +201,9 @@ class Fun(commands.Cog):
     async def deathbattle(self, ctx, member: discord.Member):
         if await in_wom_shenanigans(ctx):
             if self.currentFight:
-                return await wups(ctx, f"There is currently a fight going on")
+                return await error(ctx, f"There is currently a fight going on")
             if member.bot:
-                return await wups(ctx, f"You can't fight a bot")
+                return await error(ctx, f"You can't fight a bot")
 
             self.currentFight = True
             actor, target = (ctx.author, member) if random.choice([True, False]) else (member, ctx.author); msg = await reply(ctx, f"{ctx.author.name} challenges {member.name} to the death!")

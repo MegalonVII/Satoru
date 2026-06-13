@@ -42,7 +42,7 @@ async def help(ctx, page: str = "home"):
 
     if page not in HELP_DATA:
         options = ", ".join(f"`{key}`" for key in HELP_DATA.keys() if key != "home")
-        return await wups(ctx, f'Invalid page name. Try one of: {options}')
+        return await error(ctx, f'Invalid page name. Try one of: {options}')
 
     embed = discord.Embed(color=discord.Color.purple())
     embed.title = HELP_TITLES.get(page, f"{page.capitalize()} Commands")
