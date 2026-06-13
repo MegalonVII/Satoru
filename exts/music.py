@@ -300,7 +300,7 @@ class Music(commands.Cog):
         if err:
             return await error(ctx, err)
 
-        if await in_channels(ctx, ["wom-shenanigans", "good-tunes"], True):
+        if await in_heaven(ctx):
             async with ctx.typing():
                 msg = await ctx.reply("Hang tight! I'll try downloading your song. You'll be pinged with your song once I finish.", mention_author=False)
 

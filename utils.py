@@ -666,7 +666,6 @@ class MusicDownloadHandlers:
     @staticmethod
     def youtube(query: str) -> dict:
         return {
-            # feel free to change the browser if you want to test, but then change back to firefox once finished testing as that is the browser neel's server relies on. MAKE SURE YOU ARE SIGNED INTO YOUTUBE ON YOUR BROWSER WITH THE ASSOCIATED COOKIES!
             "cmd": f'yt-dlp {query} -x --audio-format mp3 -o "%(title)s.%(ext)s" --no-playlist --embed-metadata --embed-thumbnail --remote-components ejs:github --cookies-from-browser firefox', 
             "name": "YouTube",
             "colors": (Fore.WHITE, Back.RED),
@@ -713,7 +712,6 @@ class MusicDownloadHandlers:
 
     @staticmethod
     async def send_downloaded_files(ctx, msg):
-        """Send downloaded MP3 files and clean up."""
         new_files = [f for f in os.listdir(".") if f.endswith(".mp3")]
         for file in new_files:
             file_path = os.path.join(".", file)
@@ -898,7 +896,6 @@ class TriviaHandlers:
 
 
 # all sorts of classes for playing songs in vc
-# you may mostly ignore these since vc implementation is mostly complete.
 class VoiceError(Exception):
     pass
 
@@ -970,9 +967,6 @@ class MixedAudioSource(discord.AudioSource):
 
 class YTDLSource(discord.PCMVolumeTransformer):
     YTDLP_COOKIES_BROWSER = 'firefox'
-    # change the browser if you want to test,
-    # but then change back to firefox once finished testing as that is the browser neel's server relies on.
-    # MAKE SURE YOU ARE SIGNED INTO YOUTUBE ON YOUR BROWSER WITH THE ASSOCIATED COOKIES!
 
     def __init__(self, ctx: commands.Context, source: discord.FFmpegPCMAudio, *, data: dict, volume: float = 1.0):
         super().__init__(source, volume)
@@ -1182,7 +1176,6 @@ class VoiceState:
 
 
 # reusable bot helper functions
-# check documentation rentry for more information
 def create_list(filename):
     file_checks[filename]=False
     if not os.path.exists(f'csv/{filename}.csv'):
@@ -1460,30 +1453,6 @@ async def in_heaven(ctx):
     if not ctx.message.channel.id == heaven.id:
         await shark_react(ctx.message)
         await reply(ctx, f"go to <#{heaven.id}>, jackass")
-        return False
-    return True
-
-async def in_channels(ctx, channels: list, giveResponse: bool):
-    channelName = ctx.message.channel.name
-    ids = []
-    for channel in channels:
-        ids.append(f"<#{discord.utils.get(ctx.guild.channels, name=channel).id}>")
-    if channelName not in channels:
-        if giveResponse:
-            await shark_react(ctx.message)
-            await reply(ctx, f"this command can only be used in the following channels: {", ".join(ids)}. go to one of those channels, jackass")
-        return False
-    return True
-
-async def in_threads(ctx, threads: list, giveResponse: bool):
-    threadName = ctx.message.channel.name
-    ids = []
-    for thread in threads:
-        ids.append(f"<#{discord.utils.get(ctx.guild.threads, name=thread).id}>")
-    if threadName not in threads:
-        if giveResponse:
-            await shark_react(ctx.message)
-            await reply(ctx, f"this command can only be used in the following threads: {", ".join(ids)}. go to one of those channels, jackass")
         return False
     return True
 

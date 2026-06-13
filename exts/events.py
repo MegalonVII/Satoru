@@ -88,7 +88,7 @@ class Events(commands.Cog):
                 pass
             add_coins(member.id,100)
             direct_to_bank(member.id, 0)
-            return await member.guild.system_channel.send(f"Welcome, {member.mention}, to **The Marina**! This is your one-way ticket to Hell. There\'s no going back from here...\nFor a grasp of the rules, however (yes, we have those), we do ask that you check <#822341695411847249>.\n*Remember to take breaks, nya?*")
+            return await member.guild.system_channel.send(f"Welcome, {member.mention}, to **Chan's Strip**! This is your one-way ticket to pleasure never felt before. You'll NEVER want to leave from here...\nFor a grasp of the rules, however (yes, we have those), we do ask that you check <#1512218538470015056>.\n*Remember to take breaks.*")
         else:
             try:
                 beep = discord.utils.get(member.guild.roles, name="beep")
@@ -99,14 +99,14 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if after.is_timed_out() == True and before.is_timed_out() == False:
-            return await before.guild.system_channel.send(f"{after.mention} got timed out... for whatever reason... <:villainy:915009093662556170>")
+            return await before.guild.system_channel.send(f"{after.mention} got muted. They probably deserved it. <:bye:1512544361101918359>")
           
         if after.is_timed_out() == False and before.is_timed_out() == True:
-            return await before.guild.system_channel.send(f"Welcome back, {after.mention}. Don\'t do that again, idiot. <:do_not:1077435360537223238>")
+            return await before.guild.system_channel.send(f"Welcome back, {after.mention}. Don\'t do that again, loser. <:agony:1512243924515819691>")
     
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
-        return await guild.system_channel.send(f"{user.name} has been banned! Rest in pieces, bozo. <:kysNOW:896223569288241175>")
+        return await guild.system_channel.send(f"{user.name} has been banned! Rest in piss, bitch. <:useless:1512244209992728717>")
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):
