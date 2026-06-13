@@ -14,7 +14,7 @@ load_dotenv()
 TOKEN=getenv('DISCORD_TOKEN')
 
 # bot initialization
-bot=commands.Bot(command_prefix = '!w ', intents=discord.Intents.all())
+bot=commands.Bot(command_prefix = 'gojo ', intents=discord.Intents.all())
 bot.remove_command('help')
 extensions=['fun', 'economy', 'admin', 'flair', 'misc', 'birthday', 'music', 'events']
 
