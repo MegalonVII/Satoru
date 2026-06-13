@@ -8,7 +8,6 @@
 .gojo howgay ([Optional] @member)
 .gojo rps (your choice)
 .gojo 8ball (question)
-.gojo roulette ([Admin Only] @member)
 .gojo trivia ([Optional] type)
 .gojo emulation
 .gojo deathbattle (@user)

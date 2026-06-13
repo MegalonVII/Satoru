@@ -10,7 +10,7 @@ from random import choice
 from utils import *
 
 # bot events start here
-# on_message, on_command_error, on_message_delete, on_message_edit, on_member_join, on_member_update, on_member_ban, on_reaction_add, on_member_remove, wish_birthday
+# on_message, on_command_error, on_message_delete, on_message_edit, on_member_join, on_member_update, on_member_ban, on_member_remove, wish_birthday
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -91,7 +91,6 @@ class Events(commands.Cog):
                 pass
             add_coins(member.id,100)
             direct_to_bank(member.id, 0)
-            add_item("karma", member.id, 2)
             return await member.guild.system_channel.send(f"Welcome, {member.mention}, to **The Marina**! This is your one-way ticket to Hell. There\'s no going back from here...\nFor a grasp of the rules, however (yes, we have those), we do ask that you check <#822341695411847249>.\n*Remember to take breaks, nya?*")
         else:
             try:
@@ -111,17 +110,6 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
         return await guild.system_channel.send(f"{user.name} has been banned! Rest in pieces, bozo. <:kysNOW:896223569288241175>")
-    
-    @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if reaction.message.author == user or user.bot:
-            return
-        
-        if str(reaction.emoji) == starboard_emoji or str(reaction.emoji) == shame_emoji:
-            board_type = "starboard" if str(reaction.emoji) == starboard_emoji else "shameboard"
-            if await check_reaction_board(reaction.message, board_type):
-                return await add_to_board(reaction.message, board_type)
-
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):

@@ -73,12 +73,10 @@ async def on_ready():
         print(e)
         exit(1)
 
-    for member in bot.guilds[0].members: # mandates user has karma for roulette, along with other information
+    for member in bot.guilds[0].members:
         if not member.bot:
             id_str = str(member.id)
             id = member.id
-            if not id_str in lists["karma"].keys():
-                add_item("karma", id, 2)
             if not id_str in lists["coins"].keys():
                 add_coins(id, 100)
             if not id_str in lists["bank"].keys():

@@ -21,7 +21,7 @@ from aiohttp import ClientSession
 
 
 # global variable declarations, with 1 exception that mix_settings is a function that defines the default global mix settings
-files=["commands", "coins", "bank", "voucher", "shell", "bomb", "ticket", "letter", "banana", "karma", "voice"]
+files=["commands", "coins", "bank", "voucher", "shell", "bomb", "ticket", "letter", "banana", "voice"]
 file_checks={file:False for file in files}
 lists={file:{} for file in files}
 user_info={}
@@ -29,11 +29,8 @@ snipe_data={item:{} for item in ["content", "author", "id", "attachment"]}
 editsnipe_data={item:{} for item in ["content", "author", "id"]}
 prev_steal_targets={}
 target_counts={}
-cooldowns={"roulette":10.0, "howgay":10.0, "which":10.0, "itt":10.0, "react":5.0, "rps":5.0, "8ball":5.0, "clear":5.0, "trivia":25.0, "slots":10.0, "steal":30.0, 'bet':30.0, 'heist':600.0}
+cooldowns={"howgay":10.0, "which":10.0, "itt":10.0, "react":5.0, "rps":5.0, "8ball":5.0, "clear":5.0, "trivia":25.0, "slots":10.0, "steal":30.0, 'bet':30.0, 'heist':600.0}
 last_executed={cooldown:{} for cooldown in cooldowns}
-starboard_emoji='<:spuperman:670852114070634527>'
-shame_emoji='🪳'
-starboard_count=4
 zenny='<:zenny:1104179194780450906>'
 starttime=None
 login_timezone='America/Los_Angeles' # chose timezone as pacific because that's where i am based in
@@ -457,17 +454,6 @@ def build_pokedex_embed(pokemon, data: dict, enc_data: dict, pok_data: dict, ind
     if shiny_int != 1:
         return embed, None
     return embed, f"Woah! A Shiny {name}! ✨"
-
-# roulette()
-async def roulette_spin(ctx: commands.Context, target: discord.Member, self_fired: bool, chance: int):
-    if random.randint(1, chance) == 1:
-        await target.edit(timed_out_until=discord.utils.utcnow() + timedelta(hours=1), reason="roulette")
-        return await reply(ctx, f"🔥🔫 {'You' if self_fired else target.name} died! (muted for 1 hour)")
-
-    add_coins(target.id, 1)
-    who = "you" if self_fired else "they"
-    give = "Here's" if self_fired else "I gave them"
-    return await reply(ctx, f"🚬🔫 Looks like {who}'re safe, for now... {give} 1 {zenny} as a pity prize...")
 
 # misc.py
 # uptime()
@@ -1283,68 +1269,6 @@ def update_birthday(user_id: int, birthdate: str, tz: str):
         for row in rows:
             writer.writerow(row)
     create_birthday_list()
-
-async def check_reaction_board(message, reaction_type):
-    emoji, count = None, None
-
-    if reaction_type == "starboard":
-        emoji, count = starboard_emoji, starboard_count
-    elif reaction_type == "shameboard":
-        emoji, count = shame_emoji, starboard_count
-    if message.reactions:
-        for reaction in message.reactions:
-            if str(reaction.emoji) == emoji and reaction.count >= count:
-                return True
-    return False
-
-async def add_to_board(message, board_type):
-    board_name = "hot-seat" if board_type == "starboard" else "cold-seat"
-    board_emoji = starboard_emoji if board_type == "starboard" else shame_emoji
-    board_text = "⭐" if board_type == "starboard" else "🍅"
-
-    channel = discord.utils.get(message.guild.channels, name=board_name)
-    already_on_board = False
-    board_msg = None
-
-    async for msg in channel.history():
-        if msg.embeds and msg.embeds[0].description == f'[Original Message]({message.jump_url})':
-            already_on_board = True
-            board_msg = msg
-            break
-
-    embed = discord.Embed(color=discord.Color.gold(), description=f'[Original Message]({message.jump_url})')
-    embed.set_author(name=message.author.name, icon_url=message.author.avatar.url)
-    embed.set_thumbnail(url=message.author.avatar.url)
-    embed.add_field(name='Channel', value=f'<#{message.channel.id}>', inline=True)
-    embed.add_field(name='Message', value=f'{str(message.content)}', inline=True)
-
-    if not already_on_board:
-        try:
-            id = message.author.id
-            karma = int(lists["karma"][str(id)])
-            if board_name == "hot-seat":
-                if karma < 6:
-                    add_item("karma", id, 1)
-            else:
-                if karma > 2:
-                    if subtract_item("karma", id, 1):
-                        pass
-        except:
-            pass # probably a bot
-
-    if message.attachments:
-        embed.set_image(url=message.attachments[0].url)
-
-    for reaction in message.reactions:
-        if str(reaction.emoji) == board_emoji:
-            board_reaction = reaction
-            embed.set_footer(text=f'{board_reaction.count} {board_text}')
-            break
-
-    if already_on_board and board_msg is not None:
-        return await board_msg.edit(embed=embed)
-    else:
-        return await channel.send(embed=embed)
 
 async def reply(ctx, content: str):
     return await ctx.reply(content, mention_author=False)

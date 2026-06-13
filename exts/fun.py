@@ -12,7 +12,7 @@ from datetime import timedelta
 from utils import *
 
 # fun commands start here
-# say, custc, snipe, esnipe, choose, pokedex, who, howgay, rps, 8ball, roulette, trivia, emulation, deathbattle, ship
+# say, custc, snipe, esnipe, choose, pokedex, who, howgay, rps, 8ball, trivia, emulation, deathbattle, ship
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -148,32 +148,6 @@ class Fun(commands.Cog):
         responses = ['Hell yeah!', 'It is certain.', 'Without a doubt.', 'You may rely on it.', 'Yes, definitely.', 'It is decidedly so.', 'As I see it, yes.', 'Most likely.', 'Yes.', 'Outlook good.', 'Signs point to yes.', 'You already know the answer.', 'Reply hazy, try again.', 'Better not tell you now.', 'Ask again later.', 'Cannot predict now.', 'Concentrate and ask again.', 'Don\'t count on it.', 'Outlook not so good.', 'My sources say no.', 'Very doubtful.', 'My reply is no.', 'No.', 'Oh god, no.']
         return await reply(ctx, f"🎱 `{ctx.message.content[9:]}` 🎱\n{random.choice(responses)}")
 
-    @commands.command(name='roulette')
-    async def roulette(self, ctx, member:discord.Member=None):
-        if assert_cooldown("roulette", ctx.author.id) != 0:
-            return await wups(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('roulette', ctx.author.id)} seconds")
-
-        target = member or ctx.author
-        if target.bot:
-            return await wups(ctx, "❌🔫 You can\'t shoot the one with the bullets")
-
-        chance = int(lists["karma"][str(target.id)])
-        is_self = target == ctx.author
-
-        if is_self:
-            if target.guild_permissions.administrator:
-                return await wups(ctx, "❌🔫 Looks like you\'re safe, you filthy admin...")
-            return await roulette_spin(ctx, target, True, chance)
-
-        if not ctx.author.guild_permissions.administrator:
-            return await wups(ctx, "❌🔫 A lowlife like you can\'t possibly fire the gun at someone else...")
-        if target.guild_permissions.administrator:
-            return await wups(ctx, "❌🔫 Looks like they\'re safe, that filthy admin...")
-        if target.is_timed_out():
-            return await wups(ctx, "❌🔫 Don\'t you think it\'d be overkill to shoot a dead body?")
-
-        return await roulette_spin(ctx, target, False, chance)
-
     @commands.command(name='trivia')
     async def trivia(self, ctx, type:str = None):
         if await in_wom_shenanigans(ctx):
@@ -238,7 +212,7 @@ class Fun(commands.Cog):
                 choiceNum = random.randint(0, len(self.actions) - 1)
                 await msg.edit(content=self.actions[choiceNum].format(actor.name, target.name), allowed_mentions=discord.AllowedMentions.none())
                 await asyncio.sleep(2)
-                determinant = random.randint(1, int(lists["karma"][str(target.id)]))
+                determinant = random.randint(1, 6) == 1
                 response = self.actions[choiceNum] + f" {self.deaths[choiceNum]}" if determinant == 1 else self.actions[choiceNum] + f" {self.survivals[choiceNum]}"
                 await msg.edit(content=response.format(actor.name, target.name, target.name), allowed_mentions=discord.AllowedMentions.none())
                 if determinant == 1:
