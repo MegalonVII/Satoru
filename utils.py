@@ -31,7 +31,15 @@ prev_steal_targets={}
 target_counts={}
 cooldowns={"howgay":10.0, "which":10.0, "itt":10.0, "react":5.0, "rps":5.0, "8ball":5.0, "clear":5.0, "trivia":25.0, "slots":10.0, "steal":30.0, 'bet':30.0, 'heist':600.0}
 last_executed={cooldown:{} for cooldown in cooldowns}
-zenny='<:zenny:1104179194780450906>'
+gojowashington='<:gojowashington:1515249454624538686>'
+
+def gojo_washington_word(count: int | None = None) -> str:
+    if count == 1:
+        return "GojoWashington"
+    if count is not None:
+        return "GojoWashingtons"
+    return "GojoWashington"
+
 starttime=None
 login_timezone='America/Los_Angeles' # chose timezone as pacific because that's where i am based in
 tts_voice_aliases = {
@@ -345,16 +353,16 @@ def slots_tally_and_payout(userID: int, reels: list) -> str:
 
     if count7 == 3:
         add_coins(userID, 500)
-        return f"{reels_display}\n**Jackpot**! 500 {zenny}!"
+        return f"{reels_display}\n**Jackpot**! 500 {gojo_washington_word(500)} {gojowashington}!"
 
     if unique == 1 and reels[0] != "7️⃣":
         add_coins(userID, 100)
-        return f"{reels_display}\nSmall prize! 100 {zenny}!"
+        return f"{reels_display}\nSmall prize! 100 {gojo_washington_word(100)} {gojowashington}!"
 
     if unique == 2:
         prize = 50 if count7 == 2 else 25
         add_coins(userID, prize)
-        prize_msg = f"Two lucky 7's! 50 {zenny}!" if prize == 50 else f"Nice! 25 {zenny}!"
+        prize_msg = f"Two lucky 7's! 50 {gojo_washington_word(50)} {gojowashington}!" if prize == 50 else f"Nice! 25 {gojo_washington_word(25)} {gojowashington}!"
         return f"{reels_display}\n{prize_msg}"
 
     return f"{reels_display}\nBetter luck next time..."
@@ -538,23 +546,6 @@ class MessageHandlers:
                     pass
     
     @staticmethod
-    async def shiny_spawn(message, zenny):
-        # handle rare shiny spawns
-        from random import randint
-        
-        if message.channel.name in ['venting', 'serious-talk']:
-            return
-        
-        if randint(1, 8192) == 1:
-            direct_to_bank(message.author.id, 500)
-            with open("img/shiny.png", "rb") as f:
-                file = discord.File(f)
-                await message.channel.send(
-                    content=f"{message.author.name} stumbled across 500 {zenny} and a wild Wyvern of Marina! ✨",
-                    file=file
-                )
-    
-    @staticmethod
     async def ping_responses(message, reply_choices, reactions):
         # handle ping interactions
         from re import compile, IGNORECASE
@@ -618,7 +609,7 @@ class EconomyUseHandlers:
             member = discord.utils.get(ctx.guild.members, id=target_id)
             if stolen_funds(target_id, stolen):
                 direct_to_bank(ctx.author.id, stolen)
-                return await reply(ctx, f"Stole {stolen} {zenny} from {member.name}'s bank account! That {zenny} has been deposited into your bank account!")
+                return await reply(ctx, f"Stole {stolen} {gojo_washington_word(stolen)} {gojowashington} from {member.name}'s bank account! That {gojo_washington_word()} has been deposited into your bank account!")
         return await wups(ctx, f"You don't have a {item}")
 
     @staticmethod
@@ -679,7 +670,7 @@ class EconomyUseHandlers:
                 balance = int(lists["coins"][str(target.id)])
             if subtract_coins(target.id, int(balance // 2)):
                 add_coins(ctx.author.id, int(balance // 2))
-                return await reply(ctx, f"{target.name} got hit by a {item}! You received {balance // 2} {zenny} from them!")
+                return await reply(ctx, f"{target.name} got hit by a {item}! You received {balance // 2} {gojo_washington_word(balance // 2)} {gojowashington} from them!")
         return await wups(ctx, f"You don't have a {item}")
 
     @staticmethod

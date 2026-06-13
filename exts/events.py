@@ -32,7 +32,6 @@ class Events(commands.Cog):
         await MessageHandlers.custom_commands(message, lists)
         await MessageHandlers.phrase_triggers(message)
         await MessageHandlers.trigger_reactions(message, self.triggers, self.trigger_emojis)
-        await MessageHandlers.shiny_spawn(message, zenny)
         await MessageHandlers.ping_responses(message, self.reply_choices, self.reactions)
 
     @commands.Cog.listener()

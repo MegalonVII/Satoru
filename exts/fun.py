@@ -174,7 +174,7 @@ class Fun(commands.Cog):
 
             if selected_answer == correct_answer:
                 add_coins(ctx.author.id, 10)
-                return await answer_message.reply(f"Correct! The answer is **{correct_answer}**. 10 {zenny}!", mention_author=False)
+                return await answer_message.reply(f"Correct! The answer is **{correct_answer}**. 10 {gojo_washington_word(10)} {gojowashington}!", mention_author=False)
 
             return await answer_message.reply(f"Sorry, that's incorrect. The correct answer is **{correct_answer}**.", mention_author=False)
             

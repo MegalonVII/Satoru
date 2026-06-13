@@ -1,15 +1,15 @@
-Win some Zenny! 🤑
-Bet your Zenny for double that bet if you roll 2 dice and they both result to 7.
-Do a little bit of thievery... 😈
-Indulge in a life of crime... 🤠
-Deposit your Zenny to the bank!
-Withdraw the Zenny in your bank account!
-I'll tell you how much Zenny you or the person you mention have. It will cost you to peer into someone else's balance!
-I'll tell you how much Zenny you have in the bank.
-Pay your pal some Zenny!
-I'll show you all the items that you can buy with Zenny!
-If you have enough Zenny, you may buy an item from the Marketplace! Number value defaults to 1.
-Sell an item in your inventory for half the price. Number value defaults to 1.
-I'll tell you the items that you have!
-If you purchased the item you give me, you may use it!
-
+Win some GojoWashingtons! 🤑
+Bet your GojoWashington for double that bet if you roll 2 dice and they both result to 7.
+Do a little bit of thievery... 😈
+Indulge in a life of crime... 🤠
+Deposit your GojoWashington to the bank!
+Withdraw the GojoWashington in your bank account!
+I'll tell you how much GojoWashington you or the person you mention have. It will cost you to peer into someone else's balance!
+I'll tell you how much GojoWashington you have in the bank.
+Pay your pal some GojoWashingtons!
+I'll show you all the items that you can buy with GojoWashington!
+If you have enough GojoWashington, you may buy an item from the Marketplace! Number value defaults to 1.
+Sell an item in your inventory for half the price. Number value defaults to 1.
+I'll tell you the items that you have!
+If you purchased the item you give me, you may use it!
+
