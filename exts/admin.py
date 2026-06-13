@@ -8,7 +8,7 @@ from datetime import timedelta
 from utils import *
 
 # administrative commands start here
-# cc, dc, clear, kick, ban, mute, unmute, addf, delf
+# cc, dc, clear, kick, ban, mute, unmute
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -18,7 +18,7 @@ class Admin(commands.Cog):
         try:
             if len(output) < 1:
                 return await error(ctx, "You need to give me an output for your new command")
-            elif not ctx.author.guild_permissions.manage_messages:
+            elif not ctx.author.guild_permissions.administrator:
                 return await error(ctx, "You do not have the required permissions")
             elif name in list(lists["commands"].keys()):
                 return await error(ctx, "This command already exists")
@@ -37,7 +37,7 @@ class Admin(commands.Cog):
                     
     @commands.command(name='deletecommand', aliases=['dc'])
     async def deletecommand(self, ctx, name):
-        if not ctx.author.guild_permissions.manage_messages:
+        if not ctx.author.guild_permissions.administrator:
             return await error(ctx, "You do not have the required permissions")
         if not name in list(lists["commands"].keys()):
             return await error(ctx, "This command does not exist")
@@ -52,7 +52,7 @@ class Admin(commands.Cog):
 
     @commands.command(name='clear')
     async def clear(self, ctx, num:int=None):
-        if not ctx.author.guild_permissions.manage_messages:
+        if not ctx.author.guild_permissions.administrator:
             return await error(ctx, "You do not have the required permissions")
         if num is None or num < 1 or num > 10:
             return await error(ctx, "Please enter a number between 1 and 10")
@@ -85,19 +85,23 @@ class Admin(commands.Cog):
 
     @commands.command(name='mute')
     async def mute(self, ctx, member:discord.Member, *, args: str = " "):
-        timeunit, timelimit, reason = parse_mute_args(args)
+        if not ctx.author.id == 705317863908442142: # chan user id
+            timeunit, timelimit, reason = parse_mute_args(args)
 
-        if not ctx.author.guild_permissions.administrator:
-            return await error(ctx, "Only administrators are allowed to use this command")
-        if member.guild_permissions.administrator:
-            return await error(ctx, "Administrators can\'t be muted")
+            if not ctx.author.guild_permissions.administrator:
+                return await error(ctx, "Only administrators are allowed to use this command")
+            if member.guild_permissions.administrator:
+                return await error(ctx, "Administrators can\'t be muted")
 
-        newtime = await build_mute_duration(ctx, timeunit, timelimit)
-        if not isinstance(newtime, timedelta):
-            return # fails to mute due to invalid time duration
+            newtime = await build_mute_duration(ctx, timeunit, timelimit)
+            if not isinstance(newtime, timedelta):
+                return # fails to mute due to invalid time duration
 
-        await member.edit(timed_out_until=discord.utils.utcnow() + newtime, reason=reason)
-        return await ctx.message.delete()
+            await member.edit(timed_out_until=discord.utils.utcnow() + newtime, reason=reason)
+            return await ctx.message.delete()
+        else: 
+            await shark_react(ctx.message)
+            return await reply(ctx, "Chantalle Celeste Rosales, you pathetic worthless little bitch. Did you, with your IQ of a fucking earthworm, really think you could use this command? You piss me the ***FUCK*** off.")
 
     @commands.command(name='unmute')
     async def unmute(self, ctx, member:discord.Member):

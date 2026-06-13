@@ -21,7 +21,7 @@ from aiohttp import ClientSession
 
 
 # global variable declarations, with 1 exception that mix_settings is a function that defines the default global mix settings
-files=["commands", "coins", "bank", "voucher", "shell", "bomb", "ticket", "letter", "banana", "voice"]
+files=["commands", "coins", "bank", "shell", "bomb", "ticket", "letter", "banana", "voice"]
 file_checks={file:False for file in files}
 lists={file:{} for file in files}
 user_info={}

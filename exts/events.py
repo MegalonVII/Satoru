@@ -135,7 +135,7 @@ class Events(commands.Cog):
                 member = marina.get_member(int(key))
                 if member:
                     await marina.system_channel.send(
-                        content=f'<:luv:765073937645305896> 🎉 Happy Birthday, <@{member.id}>! {choice(self.messages)} 🎂 <:luv:765073937645305896>',
+                        content=f'❤️ 🎉 Happy Birthday, <@{member.id}>! {choice(self.messages)} 🎂 ❤️',
                         file=discord.File("img/mario-birthday.gif")
                     )
 
