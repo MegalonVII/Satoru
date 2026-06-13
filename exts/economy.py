@@ -22,7 +22,7 @@ class Economy(commands.Cog):
         if await in_heaven(ctx):
             if assert_cooldown('slots', ctx.author.id) != 0:
                 return await error(ctx, f"Slow down there, bub! Command on cooldown for another {cooldown_remaining('slots', ctx.author.id)} seconds")
-            if not subtract_coins(ctx.author.id, 10):
+            if not subtract_coins(ctx.author.id, 15):
                 return await error(ctx, f"You don't have enough {gojo_washington_word()} to play")
         
             emojis = ["🍒", "🍇", "🍊", "🍋", "🍉", "🫐", "7️⃣"]
