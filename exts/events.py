@@ -14,14 +14,13 @@ from utils import *
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.information = ["games", "messages", "reply_choices", "reactions"]
+        self.information = ["messages", "reply_choices", "reactions"]
         
         for item in self.information:
             setattr(self, item, load_info(item))
 
         # loops
         self.wish_birthday.start()
-        self.set_game_presence.start()
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -153,11 +152,6 @@ class Events(commands.Cog):
 
                         self.bot.loop.create_task(remove_role_later(member, role))
 
-    @tasks.loop(hours=3)
-    async def set_game_presence(self):
-        await self.bot.change_presence(activity=discord.Game(name=choice(self.games)))
-
-    @set_game_presence.before_loop
     @wish_birthday.before_loop
     async def before_looping(self):
         await self.bot.wait_until_ready()
