@@ -1,0 +1,16 @@
+discord.py
+pandas
+pypokedex
+pytz
+requests
+urllib3
+python-dotenv
+yt_dlp
+colorama
+pynacl
+spotdl
+scdl
+audioop-lts
+edge-tts
+deno
+davey

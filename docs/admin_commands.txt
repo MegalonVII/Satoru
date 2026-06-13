@@ -1,0 +1,8 @@
+!w createcommand (name) (output)
+!w deletecommand (name)
+!w clear (number of messages, 1-10)
+!w kick (@member)
+!w ban (@member)
+!w mute (@member) ([Optional] (time amount) (s, m, h, d, or w)) ([Optional] Reasoning)
+!w unmute (@member)
+

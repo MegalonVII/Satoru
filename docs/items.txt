@@ -1,0 +1,5 @@
+bomb
+ticket
+letter
+shell
+banana

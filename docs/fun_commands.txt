@@ -1,0 +1,16 @@
+!w say
+!w customcommands
+!w snipe
+!w editsnipe
+!w choose (any number of options, separated by a space)
+!w pokedex (number between 1 and 1017)
+!w who (remainder of question)
+!w howgay ([Optional] @member)
+!w rps (your choice)
+!w 8ball (question)
+!w roulette ([Admin Only] @member)
+!w trivia ([Optional] type)
+!w emulation
+!w deathbattle (@user)
+!w ship (phrase1) (phrase2)
+

@@ -1,0 +1,8 @@
+Create your own commands that make me send custom text or links.
+Delete commands that have already been created.
+Deletes the last number you specify of messages from the specific chat.
+Kicks the mentioned member from the server.
+Bans the mentioned member from the server.
+Mutes the mentioned member for the given time amount, defaulting to 1 hour. "s" for seconds, "m" for minutes, "h" for hours, "d" for days, and "w" for weeks.
+Unmutes the mentioned member.
+

@@ -1,0 +1,5 @@
+{} poisons {}'s drink!
+{} places a frag mine beneath {}'s feet!
+{} passes {} a blunt!
+{} burns down {}'s house!
+{} tries fearmongering that something might happen to {}!

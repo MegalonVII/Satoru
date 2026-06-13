@@ -1,0 +1,5 @@
+Adds this role as a flair to this server.
+Removes this role as a flair from this server.
+Lists all the flairs for this server.
+Gives or removes the flair you ask for.
+

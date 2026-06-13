@@ -1,0 +1,15 @@
+!w slots
+!w bet (amount)
+!w steal (@member)
+!w heist
+!w deposit (amount)
+!w withdraw (amount)
+!w balance ([Optional] @member)
+!w bankbalance
+!w paypal (@member) (amount)
+!w marketplace
+!w buy (item name) ([Optional] number requested)
+!w sell (item name) ([Optional] number requested)
+!w inventory
+!w use (item name)
+

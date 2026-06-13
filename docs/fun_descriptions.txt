@@ -1,0 +1,16 @@
+Type something after the command for me to repeat it.
+Displays a list of the server's custom commands.
+Snipes the last deleted message in that channel. Only the first media attachment will be sniped from the message. Keep in mind, you only have 60 seconds to snipe the deleted message!
+Acts just like !w snipe, only for messages that were edited instead of deleted.
+Chooses a random option from all the options that you give me.
+Returns information about said Pokémon at the given index!
+I'll tell you the name of a random member who fits this description.
+I'll tell you either how gay you are or how gay the user you mention is.
+Play a simple game of Rock-Paper-Scissors with me!
+I'll give you the magic response to your yes or no question!
+Try your luck... 😈
+I'll give you a multiple-choice trivia question. If you do not provide a type, it will be a random question on either general knowledge or some form of media. If you do, the types you may choose from are "general", "music", "film", "tv", "games", or "anime".
+A wiki for how to set up emulators for a variety of consoles!
+Fight someone... 🤠
+In the mood for some love? 😏
+

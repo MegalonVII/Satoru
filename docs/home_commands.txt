@@ -1,0 +1,8 @@
+!w help fun
+!w help economy
+!w help admin
+!w help flair
+!w help birthday
+!w help music
+!w help misc
+

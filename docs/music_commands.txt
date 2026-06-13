@@ -1,0 +1,17 @@
+!w join
+!w leave
+!w play (YouTube URL or search query)
+!w now
+!w queue (optional: page number)
+!w shuffle
+!w remove (index)
+!w moveto (from_index) (to_index)
+!w pause
+!w resume
+!w stop
+!w skip
+!w grabber (platform) (song name)
+!w mix ([Optional] (music volume) (TTS volume))
+!w voice ([Optional] male/female 1-3)
+!w tts (message)
+

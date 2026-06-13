@@ -1,0 +1,17 @@
+Joins the voice chat that you are in.
+Leaves the voice chat that I am in.
+While I'm in voice call, I will play the song from the YouTube URL or search query you provide me.
+Displays the current song that I'm playing in a voice call.
+Displays the queue of songs to play in voice call. Page value defaults to 1. Each page displays the first 10 songs in the queue.
+Shuffles the current queue of songs for voice calls. *[DJs/Admin Only]*.
+Removes the song at the provided index from the queue of songs for voice calls.
+Moves the song at the provided source index to the destination index in the queue. *[DJs/Admin Only]*.
+Pauses any music that I'm playing in a call.
+Resumes any paused music in a call.
+Stops any playing music in a call entirely.
+In a voice call, skips the current playing song to the next one in the queue. Only the song requester can do this, though DJs and Admins are unaffected.
+Yar har, me mateys! Sail the high seas and let me give you music from streaming platforms! 🏴‍☠️  (Platform must be one of the following: Spotify, YouTube, SoundCloud. If platform is SoundCloud, query must be a soundcloud.com link.)
+Allows for users to mix the volume of the two sources while they are both playing simultaneously. Volumes must be between 0 and 100. If no volumes are provided, I will display the current mix levels. *[DJs/Admins Only]*.
+Set or show your TTS voice. Ex. `!w voice male 3` or `!w voice female 1`. With no argument, shows your current voice. Options: male 1–3, female 1–3.
+I'll speak the given message in the voice channel. Limited to 200 characters.
+
