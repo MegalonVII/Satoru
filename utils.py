@@ -517,42 +517,43 @@ class MessageHandlers:
                 pass
     
     @staticmethod
-    async def ping_responses(message, reply_choices, reactions):
+    async def ping_responses(message, bot_user, reply_choices, reactions):
         # handle ping interactions
-        from re import compile, IGNORECASE
         from random import choice
         import asyncio
-        
-        wom = discord.utils.get(message.guild.members, bot=True, name="Wyvern of Marina")
-        if not wom:
+        import re
+
+        if not bot_user or not message.content:
             return
-        
-        content = message.content.strip()
-        
-        # "is this true" pattern
-        the_thing = compile(rf"<@!?{wom.id}>\s+is this true[\s\?\!\.\,]*$", IGNORECASE)
-        if the_thing.fullmatch(content):
-            if wom.nick and wom.nick.lower() == "wrok":
-                if assert_cooldown("itt", message.author.id) == 0:
-                    async with message.channel.typing():
-                        await asyncio.sleep(1)
-                        await message.reply(choice(reply_choices), mention_author=False)
-                else:
-                    await shark_react(message)
-            else:
-                await shark_react(message)
-                await message.reply("Upsie-daisy! I need to be nicknamed \"Wrok\" for this to work...", mention_author=False)
+
+        if not any(mention.id == bot_user.id for mention in message.mentions):
             return
-        
-        # general ping pattern
-        the_thing2 = compile(rf"<@!?{wom.id}>\s+.+", IGNORECASE)
-        if the_thing2.fullmatch(content):
-            if assert_cooldown("react", message.author.id) == 0:
+
+        after_mention = re.sub(rf"<@!?{bot_user.id}>\s*", "", message.content, count=1).strip()
+        if not after_mention and bot_user.mention in message.content:
+            after_mention = message.content.replace(bot_user.mention, "", 1).strip()
+
+        is_this_true = re.fullmatch(r"is this true[\s\?\!\.\,]*", after_mention, re.IGNORECASE)
+
+        if is_this_true:
+            if not reply_choices:
+                return
+            if assert_cooldown("itt", message.author.id) == 0:
                 async with message.channel.typing():
-                    await asyncio.sleep(3)
-                    await message.reply(choice(reactions), mention_author=False)
+                    await asyncio.sleep(1)
+                    await message.reply(choice(reply_choices), mention_author=False)
             else:
                 await shark_react(message)
+            return
+
+        if not reactions:
+            return
+        if assert_cooldown("react", message.author.id) == 0:
+            async with message.channel.typing():
+                await asyncio.sleep(3)
+                await message.reply(choice(reactions), mention_author=False)
+        else:
+            await shark_react(message)
 
 # use() handler class
 class EconomyUseHandlers:

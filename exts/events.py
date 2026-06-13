@@ -26,11 +26,10 @@ class Events(commands.Cog):
     async def on_message(self, message):
         if not message.guild or message.author.bot:
             return
-    
-        # Delegate to MessageHandlers class
+
         await MessageHandlers.custom_commands(message, lists)
         await MessageHandlers.phrase_triggers(message)
-        await MessageHandlers.ping_responses(message, self.reply_choices, self.reactions)
+        await MessageHandlers.ping_responses(message, self.bot.user, self.reply_choices, self.reactions)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, exc):
@@ -123,8 +122,8 @@ class Events(commands.Cog):
 
     @tasks.loop(seconds=1)
     async def wish_birthday(self):
-        marina = self.bot.guilds[0]
-        role = discord.utils.get(marina.roles, name="B-day")
+        strip = self.bot.guilds[0]
+        role = discord.utils.get(strip.roles, name="Birthday!")
 
         for key in user_info.keys():
             time_person = datetime.now(timezone(user_info[key]['timezone']))
@@ -132,9 +131,9 @@ class Events(commands.Cog):
             time_person_exact = [int(time_person.strftime('%H')), int(time_person.strftime('%M')), int(time_person.strftime('%S'))]
 
             if time_person_date == user_info[key]['birthdate'] and time_person_exact == [0,0,0]:
-                member = marina.get_member(int(key))
+                member = strip.get_member(int(key))
                 if member:
-                    await marina.system_channel.send(
+                    await strip.system_channel.send(
                         content=f'❤️ 🎉 Happy Birthday, <@{member.id}>! {choice(self.messages)} 🎂 ❤️',
                         file=discord.File("img/mario-birthday.gif")
                     )
