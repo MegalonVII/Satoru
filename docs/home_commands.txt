@@ -1,8 +1,7 @@
-!w help fun
-!w help economy
-!w help admin
-!w help flair
-!w help birthday
-!w help music
-!w help misc
+.gojo help fun
+.gojo help economy
+.gojo help admin
+.gojo help birthday
+.gojo help music
+.gojo help misc
 

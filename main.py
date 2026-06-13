@@ -14,16 +14,15 @@ load_dotenv()
 TOKEN=getenv('DISCORD_TOKEN')
 
 # bot initialization
-bot=commands.Bot(command_prefix = 'gojo ', intents=discord.Intents.all())
+bot=commands.Bot(command_prefix = '.gojo ', intents=discord.Intents.all())
 bot.remove_command('help')
-extensions=['fun', 'economy', 'admin', 'flair', 'misc', 'birthday', 'music', 'events']
+extensions=['fun', 'economy', 'admin', 'misc', 'birthday', 'music', 'events']
 
 HELP_TITLES = {
     "home": "Need help?",
     "fun": "Fun Commands",
     "economy": "Economical Commands",
     "admin": "Administrative Commands",
-    "flair": "Flair Commands",
     "birthday": "Birthday Commands",
     "music": "Musical Commands",
     "misc": "Miscellaneous Commands",

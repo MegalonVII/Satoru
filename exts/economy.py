@@ -154,7 +154,7 @@ class Economy(commands.Cog):
         embed = discord.Embed(title='Marketplace', color=discord.Color.green())
         for i in range(0, len(self.items)):
             embed.add_field(name=f'{self.items[i]}, {self.priceStrs[i]} {zenny}', value=f'{self.descs[i]}', inline=False)
-        embed.set_footer(text='If you want to purchase any of these items, use !w buy (item name). The item name is exactly as you see it in this marketplace!')
+        embed.set_footer(text='If you want to purchase any of these items, use .gojo buy (item name). The item name is exactly as you see it in this marketplace!')
         return await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command(name='buy')

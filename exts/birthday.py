@@ -27,7 +27,7 @@ class Birthday(commands.Cog):
                 member = discord.utils.get(ctx.message.guild.members, id=key)
                 temp_data.append({'user': member, 'birthday': datetime.strptime(user_info[key]['birthdate'], '%m-%d').date().strftime('%B %d')})
             temp_data = sorted(temp_data, key=lambda x: datetime.strptime(x['birthday'], '%B %d').date())
-            embed = discord.Embed(title='Marina Birthdays', color=discord.Color.blue())
+            embed = discord.Embed(title='Strip Club Employee Birthdays', color=discord.Color.blue())
             desc = ''
             for data in temp_data:
                 desc += f'{data['user'].mention}: **{data['birthday']}**\n\n'

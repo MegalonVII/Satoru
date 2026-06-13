@@ -1,5 +1,0 @@
-!w addflair (@role) [Admin Only]
-!w deleteflair (@role) [Admin Only]
-!w listflairs
-!w im (role name)
-

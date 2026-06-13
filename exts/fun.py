@@ -208,9 +208,9 @@ class Fun(commands.Cog):
     async def emulation(self, ctx, console: str = "guide"):
         if await in_channels(ctx, ["gamig", "gamig-2-coming-soon", "wom-shenanigans"], False) or await in_threads(ctx, ['Rip-bozotendo'], False):
             if console == "guide":
-                return await reply(ctx, "# __Emulation Wiki__\n\n## This is a wiki on how to get emulators for various systems set up on a PC!\n\n__**List of Valid Consoles**__ (enter as `!w emulation (console name)`)\n- NES\n- SNES\n- N64\n- GameCube\n- Wii\n- Wii U (enter as \"WiiU\")\n- GameBoy (enter as \"GB\")\n- GameBoy Color (enter as \"GBC\")\n- GameBoy Advance (enter as \"GBA\")\n- DS\n- 3DS\n- Switch\n- PS1\n- PS2\n- PS3\n- PSP\n- PS Vita (enter as \"PSVita\")\n- Master System (enter as \"MasterSystem\")\n- Genesis\n- Saturn\n- Dreamcast\n- Xbox")
+                return await reply(ctx, "# __Emulation Wiki__\n\n## This is a wiki on how to get emulators for various systems set up on a PC!\n\n__**List of Valid Consoles**__ (enter as `.gojo emulation (console name)`)\n- NES\n- SNES\n- N64\n- GameCube\n- Wii\n- Wii U (enter as \"WiiU\")\n- GameBoy (enter as \"GB\")\n- GameBoy Color (enter as \"GBC\")\n- GameBoy Advance (enter as \"GBA\")\n- DS\n- 3DS\n- Switch\n- PS1\n- PS2\n- PS3\n- PSP\n- PS Vita (enter as \"PSVita\")\n- Master System (enter as \"MasterSystem\")\n- Genesis\n- Saturn\n- Dreamcast\n- Xbox")
             elif console.lower() not in self.consoles.keys():
-                return await wups(ctx, "You entered a console that isn't on the list of valid consoles. Please refer to the list by entering `!w emulation`")
+                return await wups(ctx, "You entered a console that isn't on the list of valid consoles. Please refer to the list by entering `.gojo emulation`")
 
             for key, value in self.consoles.items():
                 if console.lower() == key:

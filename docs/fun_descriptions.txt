@@ -1,7 +1,7 @@
 Type something after the command for me to repeat it.
 Displays a list of the server's custom commands.
 Snipes the last deleted message in that channel. Only the first media attachment will be sniped from the message. Keep in mind, you only have 60 seconds to snipe the deleted message!
-Acts just like !w snipe, only for messages that were edited instead of deleted.
+Acts just like .gojo snipe, only for messages that were edited instead of deleted.
 Chooses a random option from all the options that you give me.
 Returns information about said Pokémon at the given index!
 I'll tell you the name of a random member who fits this description.

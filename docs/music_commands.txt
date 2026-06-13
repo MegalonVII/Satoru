@@ -1,17 +1,17 @@
-!w join
-!w leave
-!w play (YouTube URL or search query)
-!w now
-!w queue (optional: page number)
-!w shuffle
-!w remove (index)
-!w moveto (from_index) (to_index)
-!w pause
-!w resume
-!w stop
-!w skip
-!w grabber (platform) (song name)
-!w mix ([Optional] (music volume) (TTS volume))
-!w voice ([Optional] male/female 1-3)
-!w tts (message)
+.gojo join
+.gojo leave
+.gojo play (YouTube URL or search query)
+.gojo now
+.gojo queue (optional: page number)
+.gojo shuffle
+.gojo remove (index)
+.gojo moveto (from_index) (to_index)
+.gojo pause
+.gojo resume
+.gojo stop
+.gojo skip
+.gojo grabber (platform) (song name)
+.gojo mix ([Optional] (music volume) (TTS volume))
+.gojo voice ([Optional] male/female 1-3)
+.gojo tts (message)
 

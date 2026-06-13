@@ -38,11 +38,11 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if not ctx.message.content.split()[1] in list(lists["commands"].keys()):
-            return await wups(ctx, f'Try "!w help" ({error})')
+            return await wups(ctx, f'Try ".gojo help" ({error})')
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if message.author.bot or (message.content and message.content.startswith('!w ')):
+        if message.author.bot or (message.content and message.content.startswith('.gojo ')):
             return
 
         channel = message.channel.id

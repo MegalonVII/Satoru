@@ -1,15 +1,15 @@
-!w slots
-!w bet (amount)
-!w steal (@member)
-!w heist
-!w deposit (amount)
-!w withdraw (amount)
-!w balance ([Optional] @member)
-!w bankbalance
-!w paypal (@member) (amount)
-!w marketplace
-!w buy (item name) ([Optional] number requested)
-!w sell (item name) ([Optional] number requested)
-!w inventory
-!w use (item name)
+.gojo slots
+.gojo bet (amount)
+.gojo steal (@member)
+.gojo heist
+.gojo deposit (amount)
+.gojo withdraw (amount)
+.gojo balance ([Optional] @member)
+.gojo bankbalance
+.gojo paypal (@member) (amount)
+.gojo marketplace
+.gojo buy (item name) ([Optional] number requested)
+.gojo sell (item name) ([Optional] number requested)
+.gojo inventory
+.gojo use (item name)
 

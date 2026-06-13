@@ -1,8 +1,8 @@
-!w ping
-!w whomuted
-!w avatar ([Optional] @member)
-!w emote (emote from this server)
-!w convert (number) (original unit) (new unit)
-!w translate (phrase)
-!w uptime
-!w currency (number) (original currency) (new currency)
+.gojo ping
+.gojo whomuted
+.gojo avatar ([Optional] @member)
+.gojo emote (emote from this server)
+.gojo convert (number) (original unit) (new unit)
+.gojo translate (phrase)
+.gojo uptime
+.gojo currency (number) (original currency) (new currency)

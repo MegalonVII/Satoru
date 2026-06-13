@@ -21,7 +21,7 @@ from aiohttp import ClientSession
 
 
 # global variable declarations, with 1 exception that mix_settings is a function that defines the default global mix settings
-files=["commands", "flairs", "coins", "bank", "voucher", "shell", "bomb", "ticket", "letter", "banana", "karma", "voice"]
+files=["commands", "coins", "bank", "voucher", "shell", "bomb", "ticket", "letter", "banana", "karma", "voice"]
 file_checks={file:False for file in files}
 lists={file:{} for file in files}
 user_info={}
@@ -503,7 +503,7 @@ class MessageHandlers:
     @staticmethod
     async def custom_commands(message, lists):
         # handle custom commands from lists["commands"]
-        if message.content.startswith("!w "):
+        if message.content.startswith(".gojo "):
             parts = message.content.split()
             if len(parts) > 1 and parts[1] in lists["commands"]:
                 await message.reply(lists["commands"][parts[1]], mention_author=False)
@@ -836,7 +836,7 @@ class MusicMixHandlers:
             return "current", None, None, None
 
         if (music_volume is None) != (tts_volume is None):
-            return "error", None, None, "Please specify two different volume percentages, e.g. `!w mix 35 100`"
+            return "error", None, None, "Please specify two different volume percentages, e.g. `.gojo mix 35 100`"
 
         current_music_percent = int(current_music * 100)
         current_tts_percent = int(current_tts * 100)

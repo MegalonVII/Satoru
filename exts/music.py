@@ -340,7 +340,7 @@ class Music(commands.Cog):
         if choice is None:
             voice_id = lists["voice"].get(str(ctx.author.id))
             if voice_id is None:
-                return await reply(ctx, f"Your TTS voice is the default. Set one with `!w voice (male/female) (1/2/3)`.")
+                return await reply(ctx, f"Your TTS voice is the default. Set one with `.gojo voice (male/female) (1/2/3)`.")
             alias = voice_id_to_alias.get(voice_id, voice_id)
             return await reply(ctx, f"Your TTS voice is **{alias}**!")
         key = choice.strip().lower().replace(" ", "")
