@@ -14,7 +14,7 @@ from utils import *
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.information = ["triggers", "trigger_emojis", "games", "messages", "reply_choices", "reactions"]
+        self.information = ["games", "messages", "reply_choices", "reactions"]
         
         for item in self.information:
             setattr(self, item, load_info(item))
@@ -31,7 +31,6 @@ class Events(commands.Cog):
         # Delegate to MessageHandlers class
         await MessageHandlers.custom_commands(message, lists)
         await MessageHandlers.phrase_triggers(message)
-        await MessageHandlers.trigger_reactions(message, self.triggers, self.trigger_emojis)
         await MessageHandlers.ping_responses(message, self.reply_choices, self.reactions)
 
     @commands.Cog.listener()

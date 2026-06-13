@@ -1,6 +1,6 @@
 # Satoru
 
-**Satoru** is a hard-fork of [Wyvern of Marina](https://github.com/MegalonVII/Wyvern-of-Marina/) dated to June 13th, 2026. I did not want to let the work I did with WoM go to waste, yet still wanted to build another Discord bot for another server, so Satoru will be using WoM as a base.
+**Satoru** is a hard-fork of [Wyvern of Marina](https://github.com/MegalonVII/Wyvern-of-Marina/) dated to [June 13th, 2026](https://github.com/MegalonVII/Satoru/tree/cb3071c54b48d7976fa1ac868009c717794160fd). I did not want to let the work I did with WoM go to waste, yet still wanted to build another Discord bot for another server, so Satoru will be using WoM as a base.
 
 While the implementation is public for learning and collaboration, the bot is primarily designed for this specific community server.
 

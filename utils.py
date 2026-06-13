@@ -504,46 +504,17 @@ class MessageHandlers:
     
     @staticmethod
     async def phrase_triggers(message):
-        # handle exact phrase matches like 'skill issue', 'me', etc
         from random import choice
         
         content = message.content.strip().lower()
         
-        if content == "skill issue":
-            await message.channel.send(file=discord.File("img/skill-issue.gif"))
-        elif content == "me":
-            await message.channel.send('<:WoM:836128658828558336>')
-        elif content == "which":
-            if assert_cooldown("which", message.author.id) == 0:
-                members = [m.display_name.lower() for m in message.guild.members if not m.bot]
-                await message.channel.send(choice(members))
-            else:
-                await shark_react(message)
+        if content == "me":
+            await message.channel.send('<:satoru:1515238274128547991>')
         elif content == "hi guys":
             try:
                 await message.add_reaction("🍅")
             except:
                 pass
-    
-    @staticmethod
-    async def trigger_reactions(message, triggers, trigger_emojis):
-        # handle emoji reactions based on trigger words
-        from re import escape, search
-        
-        if message.channel.name in ['venting', 'serious-talk']:
-            return
-        
-        content_lower = message.content.lower()
-        for trigger, emoji in zip(triggers, trigger_emojis):
-            if trigger == "persona" and message.channel.name == "the-velvet-room":
-                continue
-            
-            pattern = r'\b' + escape(trigger) + r'\b'
-            if search(pattern, content_lower):
-                try:
-                    await message.add_reaction(emoji)
-                except:
-                    pass
     
     @staticmethod
     async def ping_responses(message, reply_choices, reactions):
