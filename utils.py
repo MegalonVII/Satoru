@@ -9,6 +9,7 @@ import itertools
 import json
 import audioop
 import re
+import shutil
 import tempfile
 import edge_tts
 
@@ -986,34 +987,56 @@ class MixedAudioSource(discord.AudioSource):
         if self.tts_source:
             self.tts_source.cleanup()
 
-class YTDLSource(discord.PCMVolumeTransformer):
+class YTDLSource:
     YTDLP_COOKIES_BROWSER = 'firefox'
 
-    def __init__(self, ctx: commands.Context, source: discord.FFmpegPCMAudio, *, data: dict, volume: float = 1.0):
-        super().__init__(source, volume)
+    def __init__(self, ctx: commands.Context, *, data: dict, stream_target: str):
         self.requester = ctx.author
         self.channel = ctx.channel
         self.data = data
         self.title = data.get('title')
         self.thumbnail = data.get('thumbnail')
-        self.duration = self.parse_duration(int(data.get('duration')))
+        self.duration = self.parse_duration(int(data.get('duration') or 0))
         self.tags = data.get('tags')
         self.url = data.get('webpage_url')
+        self._stream_target = stream_target
+        self._tmpdir: Optional[str] = None
+        self._temp_path: Optional[str] = None
+        self._player: Optional[discord.PCMVolumeTransformer] = None
+        self._download_proc = None
 
     def __str__(self):
         return f'**{self.title}**'
+
+    @classmethod
+    def _ytdl_base_args(cls) -> list:
+        return [
+            '--no-playlist',
+            '--no-check-certificate',
+            '--remote-components', 'ejs:github',
+            '--extractor-args', 'youtube:player_client=web',
+            '--cookies-from-browser', cls.YTDLP_COOKIES_BROWSER,
+            '--impersonate', cls.YTDLP_COOKIES_BROWSER,
+        ]
+
+    @staticmethod
+    def _pick_info(data: dict, search: str) -> dict:
+        if 'entries' in data:
+            for entry in data['entries']:
+                if entry:
+                    return entry
+        elif data:
+            return data
+        raise YTDLError(f"Upsie-daisy! Couldn\'t find anything that matches `{search}`")
 
     @classmethod
     async def _extract_info(cls, search: str):
         cmd = [
             'yt-dlp',
             '--dump-single-json',
-            '--no-playlist',
             '--default-search', 'auto',
-            '--no-check-certificate',
-            '--remote-components', 'ejs:github',
-            '-f', 'bestaudio[ext=m4a]/bestaudio/best',
-            '--cookies-from-browser', cls.YTDLP_COOKIES_BROWSER,
+            '-f', 'bestaudio/best',
+            *cls._ytdl_base_args(),
             search,
         ]
         proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
@@ -1031,33 +1054,57 @@ class YTDLSource(discord.PCMVolumeTransformer):
         except json.JSONDecodeError:
             raise YTDLError("Upsie-daisy! Couldn't parse yt-dlp output")
 
+    async def _download_audio(self) -> None:
+        self._tmpdir = tempfile.mkdtemp(prefix='cahernaut_')
+        out_template = os.path.join(self._tmpdir, 'audio.%(ext)s')
+        cmd = ['yt-dlp', '-o', out_template, '-f', 'bestaudio/best', *self._ytdl_base_args(), self._stream_target]
+        self._download_proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+        _, stderr = await self._download_proc.communicate()
+        if self._download_proc.returncode != 0:
+            self.cleanup()
+            raise YTDLError(stderr.decode(errors='replace').strip() or 'yt-dlp download failed')
+
+        files = [
+            name for name in os.listdir(self._tmpdir)
+            if os.path.isfile(os.path.join(self._tmpdir, name))
+        ]
+        if not files:
+            self.cleanup()
+            raise YTDLError('yt-dlp produced no audio file')
+        self._temp_path = os.path.join(self._tmpdir, files[0])
+
     @classmethod
     async def create_source(cls, ctx: commands.Context, search: str, *, loop: asyncio.BaseEventLoop = None):
         data = await cls._extract_info(search)
-        if data is None:
-            raise YTDLError(f"Upsie-daisy! Couldn\'t find anything that matches `{search}`")
+        info = cls._pick_info(data, search)
+        stream_target = info.get('webpage_url') or info.get('original_url') or search
+        source = cls(ctx, data=info, stream_target=stream_target)
+        await source._download_audio()
+        return source
 
-        if 'entries' in data:
-            info = None
-            for entry in data['entries']:
-                if entry:
-                    info = entry
-                    break
-        else:
-            info = data
+    async def prepare(self, volume: float) -> discord.PCMVolumeTransformer:
+        if self._player:
+            self._player.volume = volume
+            return self._player
 
-        if not info:
-            raise YTDLError(f"Upsie-daisy! Couldn\'t find anything that matches `{search}`")
+        if not self._temp_path:
+            raise YTDLError('Upsie-daisy! audio download failed')
 
-        return cls(
-            ctx,
-            discord.FFmpegPCMAudio(
-                info['url'],
-                before_options='-re -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                options='-vn',
-            ),
-            data=info,
-        )
+        ffmpeg = discord.FFmpegPCMAudio(self._temp_path, before_options='-re', options='-vn')
+        self._player = discord.PCMVolumeTransformer(ffmpeg, volume)
+        return self._player
+
+    def cleanup(self) -> None:
+        if self._download_proc and self._download_proc.returncode is None:
+            self._download_proc.kill()
+        self._download_proc = None
+        if self._player:
+            self._player.cleanup()
+            self._player = None
+        if self._tmpdir and os.path.isdir(self._tmpdir):
+            shutil.rmtree(self._tmpdir, ignore_errors=True)
+        self._tmpdir = None
+        self._temp_path = None
 
     @staticmethod
     def parse_duration(duration: int):
@@ -1106,10 +1153,17 @@ class SongQueue(asyncio.Queue):
     def clear(self):
         self._queue.clear()
 
+    def clear_with_cleanup(self):
+        for song in list(self._queue):
+            song.source.cleanup()
+        self._queue.clear()
+
     def shuffle(self):
         random.shuffle(self._queue)
 
     def remove(self, index: int):
+        song = self._queue[index]
+        song.source.cleanup()
         del self._queue[index]
 
 class VoiceState:
@@ -1163,11 +1217,14 @@ class VoiceState:
                 await self.stop()
                 return
 
-            # ensure current song respects volume
-            self.current.source.volume = self._volume
+            try:
+                player = await self.current.source.prepare(self._volume)
+            except YTDLError as e:
+                print(f'{Style.BRIGHT}Playback Error{Style.RESET_ALL}: {e}')
+                self.current.source.cleanup()
+                continue
 
-            # create a mixed audio source for this song, allowing tts overlay
-            self.mixer = MixedAudioSource(self.current.source, music_volume_when_tts=volume_adjustment)
+            self.mixer = MixedAudioSource(player, music_volume_when_tts=volume_adjustment)
             self.voice.play(self.mixer, after=self.play_next_song)
             print(f'{Style.BRIGHT}Playing {Fore.MAGENTA}{self.current.source.__str__()[2:-2]}{Fore.RESET} in {Style.RESET_ALL}{Fore.BLUE}{self.voice.channel.name}{Fore.RESET}')
             await self.current.source.channel.send(embed=self.current.create_embed())
@@ -1176,6 +1233,8 @@ class VoiceState:
     def play_next_song(self, error=None):
         if error:
             VoiceError(str(error))
+        if self.current:
+            self.current.source.cleanup()
         self.next.set()
 
     def skip(self):
@@ -1184,7 +1243,9 @@ class VoiceState:
             self.voice.stop()
 
     async def stop(self):
-        self.songs.clear()
+        self.songs.clear_with_cleanup()
+        if self.current:
+            self.current.source.cleanup()
         if hasattr(self, 'audio_player') and not self.audio_player.done():
             self.audio_player.cancel()
             try:

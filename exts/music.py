@@ -173,7 +173,7 @@ class Music(commands.Cog):
             if ctx.author.voice and ctx.voice_client.channel != ctx.author.voice.channel or ctx.author.voice is None:
                 return await error(ctx, 'You\'re not in my voice channel')
         if ctx.voice_state.is_playing:
-            ctx.voice_state.songs.clear()
+            ctx.voice_state.songs.clear_with_cleanup()
             ctx.voice_state.voice.stop()
             return await ctx.message.add_reaction('⏹️')
         else:
